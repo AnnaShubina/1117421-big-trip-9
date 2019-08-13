@@ -1,6 +1,6 @@
 export const getCardListTemplate = () => {
   return `
-    <ul class="trip-days">
+    <ul class="trip-events__list">
     </ul>
   `.trim();
 };
