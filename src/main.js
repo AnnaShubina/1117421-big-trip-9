@@ -8,6 +8,7 @@ import {getDayTemplate} from "./components/day";
 import {getCardListTemplate} from "./components/card-list";
 import {getCardContainerTemplate} from "./components/card-container";
 import {getCardTemplate} from "./components/card";
+const CARD_AMOUNT = 3;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -32,8 +33,6 @@ const day = dayList.querySelector(`.day`);
 render(day, getCardListTemplate(), `beforeEnd`);
 
 const cardList = main.querySelector(`.trip-events__list`);
-
-const CARD_AMOUNT = 3;
 
 for (let i = 0; i < CARD_AMOUNT; i++) {
   render(cardList, getCardContainerTemplate(), `beforeEnd`);
