@@ -6,10 +6,10 @@ const getDuration = (start, end) => {
   hours = (hours < 10) ? `0${hours}` : hours;
   minutes = (minutes < 10) ? `0${minutes}` : minutes;
   return {
-    days: days,
-    hours: hours,
-    minutes: minutes
-  }
+    days,
+    hours,
+    minutes
+  };
 };
 export const getCardTemplate = ({type, city, startTime, endTime, price, offers}) => {
   return `
