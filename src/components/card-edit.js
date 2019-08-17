@@ -62,13 +62,13 @@ export const getCardEditTemplate = ({type, city, startTime, endTime, price, pict
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-        ${Array.from(offers).map(({title, price}) => `
+        ${Array.from(offers).map(({title, price: amount}) => `
           <div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
             <label class="event__offer-label" for="event-offer-luggage-1">
               <span class="event__offer-title">${title}</span>
               &plus;
-              &euro;&nbsp;<span class="event__offer-price">${price}</span>
+              &euro;&nbsp;<span class="event__offer-price">${amount}</span>
             </label>
           </div>`).join(``)}
         </div>

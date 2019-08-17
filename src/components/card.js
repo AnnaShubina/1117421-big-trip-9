@@ -1,3 +1,16 @@
+const getDuration = (start, end) => {
+  let minutes = Math.abs(new Date(end).getMinutes() - new Date(start).getMinutes());
+  let hours = Math.abs(new Date(end).getHours() - new Date(start).getHours());
+  let days = Math.abs(new Date(end).getDay() - new Date(start).getDay());
+  days = (days < 10) ? `0${days}` : days;
+  hours = (hours < 10) ? `0${hours}` : hours;
+  minutes = (minutes < 10) ? `0${minutes}` : minutes;
+  return {
+    days: days,
+    hours: hours,
+    minutes: minutes
+  }
+};
 export const getCardTemplate = ({type, city, startTime, endTime, price, offers}) => {
   return `
     <div class="event">
@@ -8,11 +21,18 @@ export const getCardTemplate = ({type, city, startTime, endTime, price, offers})
 
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${new Date(startTime).toISOString()}">${new Date(startTime).getHours(startTime)}:${new Date().getMinutes()}</time>
+          <time class="event__start-time" datetime="${new Date(startTime).toISOString()}">
+          ${new Date(startTime).getHours(startTime)}:${new Date().getMinutes()}
+          </time>
           &mdash;
-          <time class="event__end-time" datetime="${new Date(endTime).toISOString()}">${new Date(endTime).getHours()}:${new Date(endTime).getMinutes()}</time>
+          <time class="event__end-time" datetime="${new Date(endTime).toISOString()}">
+          ${new Date(endTime).getHours()}:${new Date(endTime).getMinutes()}
+          </time>
         </p>
         <p class="event__duration">
+        ${getDuration(endTime, startTime).days !== `00` ? `${getDuration(endTime, startTime).days}D` : ``}
+        ${getDuration(endTime, startTime).hours !== `00` ? `${getDuration(endTime, startTime).hours}H` : ``}
+        ${getDuration(endTime, startTime).minutes !== `00` ? `${getDuration(endTime, startTime).minutes}M` : ``}
         </p>
       </div>
 
@@ -22,11 +42,11 @@ export const getCardTemplate = ({type, city, startTime, endTime, price, offers})
 
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${Array.from(offers).filter(({isApplied}) => isApplied).map(({title, price}, i) => i < 2 ? `
+        ${Array.from(offers).filter(({isApplied}) => isApplied).map(({title, price: amount}, i) => i < 2 ? `
         <li class="event__offer">
           <span class="event__offer-title">${title}</span>
           &plus;
-          &euro;&nbsp;<span class="event__offer-price">${price}</span>
+          &euro;&nbsp;<span class="event__offer-price">${amount}</span>
          </li>
         ` : ``).join(``)}
       </ul>

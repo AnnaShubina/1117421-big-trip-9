@@ -1,8 +1,8 @@
 const getCitiesCount = (cards) => {
   const cities = cards.map(({city}) => city);
-  const uniqCity = new Set(cities);
-  return uniqCity.size;
-}
+  const uniqCities = new Set(cities);
+  return uniqCities.size;
+};
 export const getTripInfoTemplate = (cards) => {
   return `
     <div class="trip-info__main"> 

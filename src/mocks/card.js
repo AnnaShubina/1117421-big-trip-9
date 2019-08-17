@@ -1,51 +1,73 @@
 const COUNT_CARD = 5;
 const COUNT_PICTURE = 5;
+const offers = [{
+  title: `Add luggage`,
+  price: 10 + Math.floor(Math.random() * 10),
+  isApplied: Boolean(Math.round(Math.random()))
+}, {
+  title: `Switch to comfort class`,
+  price: 10 + Math.floor(Math.random() * 10),
+  isApplied: Boolean(Math.round(Math.random()))
+}, {
+  title: `Add meal`,
+  price: 10 + Math.floor(Math.random() * 10),
+  isApplied: Boolean(Math.round(Math.random()))
+}, {
+  title: `Choose seats`,
+  price: 10 + Math.floor(Math.random() * 10),
+  isApplied: Boolean(Math.round(Math.random()))
+}, {
+  title: `Travel by train`,
+  price: 10 + Math.floor(Math.random() * 10),
+  isApplied: Boolean(Math.round(Math.random()))
+}];
+const types = [{
+  title: `Taxi`,
+  placeholder: `to`
+},
+{
+  title: `Bus`,
+  placeholder: `to`
+},
+{
+  title: `Train`,
+  placeholder: `to`
+},
+{
+  title: `Trip`,
+  placeholder: `at`
+},
+{
+  title: `Bus`,
+  placeholder: `to`
+},
+{
+  title: `Ship`,
+  placeholder: `to`
+},
+{
+  title: `Check-in`,
+  placeholder: `in`
+},
+{
+  title: `Transport`,
+  placeholder: `to`
+},
+{
+  title: `Drive`,
+  placeholder: `at`
+},
+{
+  title: `Sightseeing`,
+  placeholder: `at`
+},
+{
+  title: `Restaurant`,
+  placeholder: `in`
+}
+];
 const getCard = () => ({
-  type: [{
-      title: `Taxi`,
-      placeholder: `to`
-    },
-    {
-      title: `Bus`,
-      placeholder: `to`
-    },
-    {
-      title: `Train`,
-      placeholder: `to`
-    },
-    {
-      title: `Trip`,
-      placeholder: `at`
-    },
-    {
-      title: `Bus`,
-      placeholder: `to`
-    },
-    {
-      title: `Ship`,
-      placeholder: `to`
-    },
-    {
-      title: `Check-in`,
-      placeholder: `in`
-    },
-    {
-      title: `Transport`,
-      placeholder: `to`
-    },
-    {
-      title: `Drive`,
-      placeholder: `at`
-    },
-    {
-      title: `Sightseeing`,
-      placeholder: `at`
-    },
-    {
-      title: `Restaurant`,
-      placeholder: `in`
-    }
-  ][Math.floor(Math.random() * 11)],
+  type: types[Math.floor(Math.random() * 11)],
   city: [
     `Amsterdam`,
     `Geneva`,
@@ -60,30 +82,10 @@ const getCard = () => ({
     `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.`,
     `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
   ],
-  startTime: Date.now() - Math.floor(Math.random() * 2) * 24 * 60 * 60 * 1000,
-  endTime: Date.now() + Math.floor(Math.random() * 2) * 24 * 60 * 60 * 1000,
+  startTime: Date.now() - Math.floor(Math.random() * 2) * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000,
+  endTime: Date.now() + Math.floor(Math.random() * 2) * 24 * 60 * 60 * 1000 + 20 * 60 * 1000,
   price: 100 + Math.floor(Math.random() * 100),
-  offers: new Set([{
-    title: `Add luggage`,
-    price: 10 + Math.floor(Math.random() * 10),
-    isApplied: Boolean(Math.round(Math.random()))
-  }, {
-    title: `Switch to comfort class`,
-    price: 10 + Math.floor(Math.random() * 10),
-    isApplied: Boolean(Math.round(Math.random()))
-  }, {
-    title: `Add meal`,
-    price: 10 + Math.floor(Math.random() * 10),
-    isApplied: Boolean(Math.round(Math.random()))
-  }, {
-    title: `Choose seats`,
-    price: 10 + Math.floor(Math.random() * 10),
-    isApplied: Boolean(Math.round(Math.random()))
-  }, {
-    title: `Travel by train`,
-    price: 10 + Math.floor(Math.random() * 10),
-    isApplied: Boolean(Math.round(Math.random()))
-  }])
+  offers: new Set(offers)
 });
 
 export default new Array(COUNT_CARD).fill(``).map(getCard);

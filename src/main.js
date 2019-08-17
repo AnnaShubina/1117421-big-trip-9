@@ -8,9 +8,9 @@ import {getDayTemplate} from "./components/day";
 import {getCardListTemplate} from "./components/card-list";
 import {getCardContainerTemplate} from "./components/card-container";
 import {getCardTemplate} from "./components/card";
-import cards from "./mocks/card.js"
-import menuItems from "./mocks/menu.js"
-import filterItems from "./mocks/filter.js"
+import cards from "./mocks/card.js";
+import menuItems from "./mocks/menu.js";
+import filterItems from "./mocks/filter.js";
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -42,11 +42,11 @@ cards.slice(1).forEach((card) => {
   render(cardList, getCardContainerTemplate(), `beforeEnd`);
   container = cardList.querySelector(`.trip-events__item:last-child`);
   render(container, getCardTemplate(card), `beforeEnd`);
-})
+});
 
 const costContainer = document.querySelector(`.trip-info__cost-value`);
-const getTotalSum = (cards) => {
-  const sumMain = cards.map(({price}) => price).reduce((sum, current) => {
+const getTotalSum = (cardsItems) => {
+  const sumMain = cardsItems.map(({price}) => price).reduce((sum, current) => {
     return sum + current;
   }, 0);
   const sumAdd = cards.map(({offers}) => offers).filter(({isApplied}) => isApplied).reduce((sum, current) => {
