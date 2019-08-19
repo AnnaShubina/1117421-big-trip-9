@@ -17,6 +17,5 @@ export const getFilterTemplate = () => {
       </div>
 
       <button class="visually-hidden" type="submit">Accept filter</button>
-    </form>
-  `.trim();
+    </form>`.trim();
 };
