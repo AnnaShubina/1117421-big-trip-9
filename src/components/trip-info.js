@@ -19,11 +19,27 @@ const monthNames = {
   12: `DEC`
 };
 
+const getCityTemplate = (cards) => {
+  const count = getCitiesCount(cards);
+  let result;
+  switch (count) {
+    case 2:
+      result = ``;
+      break;
+    case 3:
+      result = `${cards[1].city} &mdash;`;
+      break;
+    default:
+      result = `... &mdash;`;
+  }
+  return result;
+};
+
 export const getTripInfoTemplate = (cards) => {
   return `
     <div class="trip-info__main"> 
       <h1 class="trip-info__title">${cards[0].city} &mdash;
-       ${getCitiesCount(cards) > 3 ? `... &mdash;` : getCitiesCount(cards) === 2 ? `` : `${cards[1].city} &mdash;`}
+       ${getCityTemplate(cards)}
        ${cards[cards.length - 1].city}</h1>
       <p class="trip-info__dates">
       ${monthNames[new Date(cards[0].startTime).getMonth()]} ${new Date(cards[0].startTime).getDay()}
