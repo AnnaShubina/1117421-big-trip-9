@@ -1,5 +1,6 @@
 const COUNT_CARD = 5;
 const COUNT_PICTURE = 5;
+
 const offers = [{
   title: `Add luggage`,
   price: 10 + Math.floor(Math.random() * 10),
@@ -21,6 +22,7 @@ const offers = [{
   price: 10 + Math.floor(Math.random() * 10),
   isApplied: Boolean(Math.round(Math.random()))
 }];
+
 const types = [{
   id: `taxi`,
   title: `Taxi`,
@@ -72,6 +74,7 @@ const types = [{
   placeholder: `in`
 }
 ];
+
 const getCard = () => ({
   type: types[Math.floor(Math.random() * 10)],
   city: [

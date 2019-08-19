@@ -11,6 +11,7 @@ const getDuration = (start, end) => {
     minutes
   };
 };
+
 export const getCardTemplate = ({type, city, startTime, endTime, price, offers}) => {
   return `
     <div class="event">

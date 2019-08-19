@@ -3,6 +3,7 @@ const getCitiesCount = (cards) => {
   const uniqCities = new Set(cities);
   return uniqCities.size;
 };
+
 const monthNames = {
   1: `JUN`,
   2: `FEB`,
@@ -17,12 +18,13 @@ const monthNames = {
   11: `NOV`,
   12: `DEC`
 };
+
 export const getTripInfoTemplate = (cards) => {
   return `
     <div class="trip-info__main"> 
-      ${getCitiesCount(cards) > 2 ? `
-      <h1 class="trip-info__title">${cards[0].city} &mdash; ... &mdash; ${cards[cards.length - 1].city}</h1>
-      ` : ` <h1 class="trip-info__title">${cards[0].city} &mdash; ${cards[cards.length - 1].city}</h1>`} 
+      <h1 class="trip-info__title">${cards[0].city} &mdash;
+       ${getCitiesCount(cards) > 3 ? `... &mdash;` : getCitiesCount(cards) === 2 ? `` : `${cards[1].city} &mdash;`}
+       ${cards[cards.length - 1].city}</h1>
       <p class="trip-info__dates">
       ${monthNames[new Date(cards[0].startTime).getMonth()]} ${new Date(cards[0].startTime).getDay()}
       &nbsp;&mdash;&nbsp;
