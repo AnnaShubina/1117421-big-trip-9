@@ -1,3 +1,6 @@
+const getTime = (time) => {
+  return `${new Date(time).getDay()}/${new Date(time).getMonth()}/${new Date(time).getYear()} ${new Date(time).getHours(time)}:${new Date().getMinutes()}`;
+};
 export const getCardEditTemplate = ({type, city, startTime, endTime, price, pictures, description, offers}) => {
   return `
   <form class="event  event--edit" action="#" method="post">
@@ -23,13 +26,13 @@ export const getCardEditTemplate = ({type, city, startTime, endTime, price, pict
           From
         </label>
         <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time"
-         value="${new Date(startTime).getDay()}/${new Date(startTime).getMonth()}/${new Date(startTime).getYear()} ${new Date(startTime).getHours(startTime)}:${new Date().getMinutes()}">
+         value="${getTime(startTime)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
         <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" 
-        value="${new Date(endTime).getDay()}/${new Date(endTime).getMonth()}/${new Date(endTime).getYear()} ${new Date(endTime).getHours(endTime)}:${new Date().getMinutes()}">
+        value="${getTime(endTime)}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
