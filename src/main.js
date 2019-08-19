@@ -9,8 +9,6 @@ import {getCardListTemplate} from "./components/card-list";
 import {getCardContainerTemplate} from "./components/card-container";
 import {getCardTemplate} from "./components/card";
 import cards from "./mocks/card.js";
-import menuItems from "./mocks/menu.js";
-import filterItems from "./mocks/filter.js";
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -22,8 +20,8 @@ const filterContainer = document.querySelector(`.trip-controls h2:last-child`);
 const main = document.querySelector(`.trip-events`);
 
 render(tripInfo, getTripInfoTemplate(cards), `afterBegin`);
-render(navContainer, getMenuTemplate(menuItems), `afterEnd`);
-render(filterContainer, getFilterTemplate(filterItems), `afterEnd`);
+render(navContainer, getMenuTemplate(), `afterEnd`);
+render(filterContainer, getFilterTemplate(), `afterEnd`);
 render(main, getSortingTemplate(), `beforeEnd`);
 render(main, getDayListTemplate(), `beforeEnd`);
 

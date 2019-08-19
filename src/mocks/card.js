@@ -22,52 +22,58 @@ const offers = [{
   isApplied: Boolean(Math.round(Math.random()))
 }];
 const types = [{
+  id: `taxi`,
   title: `Taxi`,
   placeholder: `to`
 },
 {
+  id: `bus`,
   title: `Bus`,
   placeholder: `to`
 },
 {
+  id: `train`,
   title: `Train`,
   placeholder: `to`
 },
 {
+  id: `trip`,
   title: `Trip`,
   placeholder: `at`
 },
 {
-  title: `Bus`,
-  placeholder: `to`
-},
-{
+  id: `ship`,
   title: `Ship`,
   placeholder: `to`
 },
 {
+  id: `check-in`,
   title: `Check-in`,
   placeholder: `in`
 },
 {
+  id: `transport`,
   title: `Transport`,
   placeholder: `to`
 },
 {
+  id: `drive`,
   title: `Drive`,
   placeholder: `at`
 },
 {
+  id: `sightseeing`,
   title: `Sightseeing`,
   placeholder: `at`
 },
 {
+  id: `restaurant`,
   title: `Restaurant`,
   placeholder: `in`
 }
 ];
 const getCard = () => ({
-  type: types[Math.floor(Math.random() * 11)],
+  type: types[Math.floor(Math.random() * 10)],
   city: [
     `Amsterdam`,
     `Geneva`,
