@@ -1,4 +1,4 @@
-import {monthNames} from '../utils.js';
+import {monthNames, createElement} from '../utils.js';
 
 export default class TripInfo {
   constructor(cards) {
@@ -26,6 +26,18 @@ export default class TripInfo {
         result = `... &mdash;`;
     }
     return result;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
   }
 
   getTemplate() {

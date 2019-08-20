@@ -13,4 +13,15 @@ const monthNames = {
   12: `DEC`
 };
 
-export {monthNames};
+const Position = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
+export {monthNames, Position, createElement};

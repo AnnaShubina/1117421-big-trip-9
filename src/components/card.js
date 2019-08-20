@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 export default class Card {
   constructor({type, city, startTime, endTime, price, offers}) {
     this._element = null;
@@ -21,6 +23,18 @@ export default class Card {
       hours,
       minutes
     };
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
   }
 
   getTemplate() {
