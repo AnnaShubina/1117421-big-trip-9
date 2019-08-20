@@ -15,7 +15,9 @@ const monthNames = {
 
 const Position = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  AFTER: `after`,
+  BEFORE: `before`
 };
 
 const createElement = (template) => {
@@ -25,20 +27,26 @@ const createElement = (template) => {
 };
 
 const render = (container, element, place) => {
-    switch (place) {
-      case Position.AFTERBEGIN:
-        container.prepend(element);
-        break;
-      case Position.BEFOREEND:
-        container.append(element);
-        break;
-    }
-  };
-  
-  const unrender = (element) => {
-    if (element) {
-      element.remove();
-    }
-  };
+  switch (place) {
+    case Position.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case Position.BEFOREEND:
+      container.append(element);
+      break;
+    case Position.AFTER:
+      container.after(element);
+      break;
+    case Position.BEFORE:
+      container.before(element);
+      break;
+  }
+};
+
+const unrender = (element) => {
+  if (element) {
+    element.remove();
+  }
+};
 
 export {monthNames, Position, createElement, render, unrender};

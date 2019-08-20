@@ -1,45 +1,61 @@
-import {getTripInfoTemplate} from "./components/trip-info";
-import {getMenuTemplate} from "./components/menu";
-import {getFilterTemplate} from "./components/filter";
-import {getSortingTemplate} from "./components/sorting";
-import {getCardEditTemplate} from "./components/card-edit";
-import {getDayListTemplate} from "./components/day-list";
-import {getDayTemplate} from "./components/day";
-import {getCardListTemplate} from "./components/card-list";
-import {getCardContainerTemplate} from "./components/card-container";
-import {getCardTemplate} from "./components/card";
+import TripInfo from "./components/trip-info";
+import Menu from "./components/menu";
+import Filter from "./components/filter";
+import Sorting from "./components/sorting";
+import CardEdit from "./components/card-edit";
+import DayList from "./components/day-list";
+import Day from "./components/day";
+import CardList from "./components/card-list";
+import CardContainer from "./components/card-container";
+import Card from "./components/card";
 import cards from "./mocks/card.js";
+import {Position, render} from "./utils.js";
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+const tripInfoContainer = document.querySelector(`.trip-info`);
+const navHeader = document.querySelector(`.trip-controls h2:first-child`);
+const filterHeader = document.querySelector(`.trip-controls h2:last-child`);
+const mainContainer = document.querySelector(`.trip-events`);
+
+const tripInfo = new TripInfo(cards);
+const menu = new Menu();
+const filter = new Filter();
+const dayList = new DayList();
+const sorting = new Sorting();
+const day = new Day();
+const cardList = new CardList();
+
+render(tripInfoContainer, tripInfo.getElement(), Position.AFTERBEGIN);
+render(navHeader, menu.getElement(), Position.AFTER);
+render(filterHeader, filter.getElement(), Position.AFTER);
+render(mainContainer, sorting.getElement(), Position.BEFOREEND);
+render(mainContainer, dayList.getElement(), Position.BEFOREEND);
+render(dayList.getElement(), day.getElement(), Position.BEFOREEND);
+render(day.getElement(), cardList.getElement(), Position.BEFOREEND);
+
+const renderCard = (cardMock) => {
+  const cardContainer = new CardContainer();
+  const card = new Card(cardMock);
+  const cardEdit = new CardEdit(cardMock);
+  let container;
+
+  card.getElement()
+    .querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, () => {
+      container.replaceChild(cardEdit.getElement(), card.getElement());
+    });
+
+  cardEdit.getElement()
+    .addEventListener(`submit`, () => {
+      container.replaceChild(card.getElement(), cardEdit.getElement());
+    });
+
+  render(cardList.getElement(), cardContainer.getElement(), Position.BEFOREEND);
+  container = cardList.getElement().querySelector(`.trip-events__item:last-child`);
+  render(container, card.getElement(), Position.BEFOREEND);
 };
 
-const tripInfo = document.querySelector(`.trip-info`);
-const navContainer = document.querySelector(`.trip-controls h2:first-child`);
-const filterContainer = document.querySelector(`.trip-controls h2:last-child`);
-const main = document.querySelector(`.trip-events`);
-
-render(tripInfo, getTripInfoTemplate(cards), `afterBegin`);
-render(navContainer, getMenuTemplate(), `afterEnd`);
-render(filterContainer, getFilterTemplate(), `afterEnd`);
-render(main, getSortingTemplate(), `beforeEnd`);
-render(main, getDayListTemplate(), `beforeEnd`);
-
-const dayList = main.querySelector(`.trip-days`);
-render(dayList, getDayTemplate(), `beforeEnd`);
-
-const day = dayList.querySelector(`.day`);
-render(day, getCardListTemplate(), `beforeEnd`);
-
-const cardList = main.querySelector(`.trip-events__list`);
-render(cardList, getCardContainerTemplate(), `beforeEnd`);
-let container = cardList.querySelector(`.trip-events__item:last-child`);
-render(container, getCardEditTemplate(cards[0]), `beforeEnd`);
-
-cards.slice(1).forEach((card) => {
-  render(cardList, getCardContainerTemplate(), `beforeEnd`);
-  container = cardList.querySelector(`.trip-events__item:last-child`);
-  render(container, getCardTemplate(card), `beforeEnd`);
+cards.forEach((card) => {
+  renderCard(card);
 });
 
 const costContainer = document.querySelector(`.trip-info__cost-value`);
@@ -53,4 +69,4 @@ const getTotalSum = (cardsItems) => {
   const result = sumMain + sumAdd;
   return result;
 };
-render(costContainer, getTotalSum(cards), `beforeEnd`);
+costContainer.innerHTML = getTotalSum(cards);
