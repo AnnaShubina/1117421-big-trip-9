@@ -24,4 +24,21 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export {monthNames, Position, createElement};
+const render = (container, element, place) => {
+    switch (place) {
+      case Position.AFTERBEGIN:
+        container.prepend(element);
+        break;
+      case Position.BEFOREEND:
+        container.append(element);
+        break;
+    }
+  };
+  
+  const unrender = (element) => {
+    if (element) {
+      element.remove();
+    }
+  };
+
+export {monthNames, Position, createElement, render, unrender};
