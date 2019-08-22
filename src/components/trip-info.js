@@ -6,24 +6,19 @@ export default class TripInfo {
     this._cards = cards;
   }
 
-  getCitiesCount(cards) {
+  getRouteTemplate(cards) {
     const cities = cards.map(({city}) => city);
-    const uniqCities = new Set(cities);
-    return uniqCities.size;
-  }
-
-  getCityTemplate(cards) {
-    const count = this.getCitiesCount(cards);
+    const count = cities.length;
     let result;
     switch (count) {
       case 2:
-        result = ``;
+        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ${cities[1]}</h1>`;
         break;
       case 3:
-        result = `${cards[1].city} &mdash;`;
+        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ${cities[1]} &mdash; ${cities[2]}</h1>`;
         break;
       default:
-        result = `... &mdash;`;
+        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ... &mdash; ${cities[cities.length - 1]}</h1>`;
     }
     return result;
   }
@@ -43,9 +38,7 @@ export default class TripInfo {
   getTemplate() {
     return `
       <div class="trip-info__main"> 
-        <h1 class="trip-info__title">${this._cards[0].city} &mdash;
-         ${this.getCityTemplate(this._cards)}
-         ${this._cards[this._cards.length - 1].city}</h1>
+        ${this.getRouteTemplate(this._cards)}
         <p class="trip-info__dates">
         ${monthNames[new Date(this._cards[0].startTime).getMonth()]} ${new Date(this._cards[0].startTime).getDay()}
         &nbsp;&mdash;&nbsp;
