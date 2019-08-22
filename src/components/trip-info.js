@@ -1,50 +1,49 @@
-const getCitiesCount = (cards) => {
-  const cities = cards.map(({city}) => city);
-  const uniqCities = new Set(cities);
-  return uniqCities.size;
-};
+import {monthNames, createElement} from '../utils.js';
 
-const monthNames = {
-  1: `JUN`,
-  2: `FEB`,
-  3: `MAR`,
-  4: `APR`,
-  5: `MAY`,
-  6: `JUN`,
-  7: `JUL`,
-  8: `AUG`,
-  9: `SEP`,
-  10: `OCT`,
-  11: `NOV`,
-  12: `DEC`
-};
-
-const getCityTemplate = (cards) => {
-  const count = getCitiesCount(cards);
-  let result;
-  switch (count) {
-    case 2:
-      result = ``;
-      break;
-    case 3:
-      result = `${cards[1].city} &mdash;`;
-      break;
-    default:
-      result = `... &mdash;`;
+export default class TripInfo {
+  constructor(cards) {
+    this._element = null;
+    this._cards = cards;
   }
-  return result;
-};
 
-export const getTripInfoTemplate = (cards) => {
-  return `
-    <div class="trip-info__main"> 
-      <h1 class="trip-info__title">${cards[0].city} &mdash;
-       ${getCityTemplate(cards)}
-       ${cards[cards.length - 1].city}</h1>
-      <p class="trip-info__dates">
-      ${monthNames[new Date(cards[0].startTime).getMonth()]} ${new Date(cards[0].startTime).getDay()}
-      &nbsp;&mdash;&nbsp;
-      ${monthNames[new Date(cards[cards.length - 1].endTime).getMonth()]} ${new Date(cards[cards.length - 1].endTime).getDay()}
-      </p>
-    </div>`.trim();
-};
+  getRouteTemplate(cards) {
+    const cities = cards.map(({city}) => city);
+    const count = cities.length;
+    let result;
+    switch (count) {
+      case 2:
+        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ${cities[1]}</h1>`;
+        break;
+      case 3:
+        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ${cities[1]} &mdash; ${cities[2]}</h1>`;
+        break;
+      default:
+        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ... &mdash; ${cities[cities.length - 1]}</h1>`;
+    }
+    return result;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `
+      <div class="trip-info__main"> 
+        ${this.getRouteTemplate(this._cards)}
+        <p class="trip-info__dates">
+        ${monthNames[new Date(this._cards[0].startTime).getMonth()]} ${new Date(this._cards[0].startTime).getDay()}
+        &nbsp;&mdash;&nbsp;
+        ${monthNames[new Date(this._cards[this._cards.length - 1].endTime).getMonth()]} ${new Date(this._cards[this._cards.length - 1].endTime).getDay()}
+        </p>
+      </div>`.trim();
+  }
+}
