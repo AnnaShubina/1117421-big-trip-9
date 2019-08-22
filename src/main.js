@@ -24,13 +24,8 @@ const sorting = new Sorting();
 const day = new Day();
 const cardList = new CardList();
 
-render(tripInfoContainer, tripInfo.getElement(), Position.AFTERBEGIN);
 render(navHeader, menu.getElement(), Position.AFTER);
 render(filterHeader, filter.getElement(), Position.AFTER);
-render(mainContainer, sorting.getElement(), Position.BEFOREEND);
-render(mainContainer, dayList.getElement(), Position.BEFOREEND);
-render(dayList.getElement(), day.getElement(), Position.BEFOREEND);
-render(day.getElement(), cardList.getElement(), Position.BEFOREEND);
 
 const renderCard = (cardMock) => {
   const cardContainer = new CardContainer();
@@ -62,10 +57,6 @@ const renderCard = (cardMock) => {
   render(container, card.getElement(), Position.BEFOREEND);
 };
 
-cards.forEach((card) => {
-  renderCard(card);
-});
-
 const costContainer = document.querySelector(`.trip-info__cost-value`);
 const getTotalSum = (cardsItems) => {
   const sumMain = cardsItems.map(({price}) => price).reduce((sum, current) => {
@@ -77,4 +68,19 @@ const getTotalSum = (cardsItems) => {
   const result = sumMain + sumAdd;
   return result;
 };
-costContainer.innerHTML = getTotalSum(cards);
+
+if (cards.length) {
+  render(tripInfoContainer, tripInfo.getElement(), Position.AFTERBEGIN);
+  render(mainContainer, sorting.getElement(), Position.BEFOREEND);
+  render(mainContainer, dayList.getElement(), Position.BEFOREEND);
+  render(dayList.getElement(), day.getElement(), Position.BEFOREEND);
+  render(day.getElement(), cardList.getElement(), Position.BEFOREEND);
+
+  cards.forEach((card) => {
+    renderCard(card);
+  });
+
+  costContainer.innerHTML = getTotalSum(cards);
+} else {
+  mainContainer.insertAdjacentHTML(`beforeend`, `<p class="trip-events__msg">Click New Event to create your first point</p>`);
+}
