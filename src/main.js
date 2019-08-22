@@ -36,17 +36,25 @@ const renderCard = (cardMock) => {
   const cardContainer = new CardContainer();
   const card = new Card(cardMock);
   const cardEdit = new CardEdit(cardMock);
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      container.replaceChild(card.getElement(), cardEdit.getElement());
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
   let container;
 
   card.getElement()
     .querySelector(`.event__rollup-btn`)
     .addEventListener(`click`, () => {
       container.replaceChild(cardEdit.getElement(), card.getElement());
+      document.addEventListener(`keydown`, onEscKeyDown);
     });
 
   cardEdit.getElement()
     .addEventListener(`submit`, () => {
       container.replaceChild(card.getElement(), cardEdit.getElement());
+      document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
   render(cardList.getElement(), cardContainer.getElement(), Position.BEFOREEND);
