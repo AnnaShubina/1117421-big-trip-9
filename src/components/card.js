@@ -1,8 +1,8 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from '../components/absctract-component.js';
 
-export default class Card {
+export default class Card extends AbstractComponent {
   constructor({type, city, startTime, endTime, price, offers}) {
-    this._element = null;
+    super();
     this._type = type;
     this._city = city;
     this._startTime = new Date(startTime);
@@ -23,18 +23,6 @@ export default class Card {
       hours,
       minutes
     };
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {

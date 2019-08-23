@@ -1,8 +1,9 @@
-import {monthNames, createElement} from '../utils.js';
+import {monthNames} from '../utils.js';
+import AbstractComponent from '../components/absctract-component.js';
 
-export default class TripInfo {
+export default class TripInfo extends AbstractComponent {
   constructor(cards) {
-    this._element = null;
+    super();
     this._cards = cards;
   }
 
@@ -21,18 +22,6 @@ export default class TripInfo {
         result = `<h1 class="trip-info__title">${cities[0]} &mdash; ... &mdash; ${cities[cities.length - 1]}</h1>`;
     }
     return result;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {
