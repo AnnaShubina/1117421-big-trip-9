@@ -27,11 +27,12 @@ export default class TripInfo extends AbstractComponent {
   getTemplate() {
     return `
       <div class="trip-info__main"> 
-        ${this.getRouteTemplate(this._cards)}
+        ${this._cards.length ? `${this.getRouteTemplate(this._cards)}` : ``}
         <p class="trip-info__dates">
-        ${monthNames[new Date(this._cards[0].startTime).getMonth()]} ${new Date(this._cards[0].startTime).getDay()}
-        &nbsp;&mdash;&nbsp;
-        ${monthNames[new Date(this._cards[this._cards.length - 1].endTime).getMonth()]} ${new Date(this._cards[this._cards.length - 1].endTime).getDay()}
+        ${this._cards.length ? `
+          ${monthNames[new Date(this._cards[0].startTime).getMonth()]} ${new Date(this._cards[0].startTime).getDay()}
+          &nbsp;&mdash;&nbsp;
+          ${monthNames[new Date(this._cards[this._cards.length - 1].endTime).getMonth()]} ${new Date(this._cards[this._cards.length - 1].endTime).getDay()}` : ``}
         </p>
       </div>`.trim();
   }
