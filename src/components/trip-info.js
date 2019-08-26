@@ -13,13 +13,13 @@ export default class TripInfo extends AbstractComponent {
     let result;
     switch (count) {
       case 2:
-        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ${cities[1]}</h1>`;
+        result = `${cities[0]} &mdash; ${cities[1]}`;
         break;
       case 3:
-        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ${cities[1]} &mdash; ${cities[2]}</h1>`;
+        result = `${cities[0]} &mdash; ${cities[1]} &mdash; ${cities[2]}`;
         break;
       default:
-        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ... &mdash; ${cities[cities.length - 1]}</h1>`;
+        result = `${cities[0]} &mdash; ... &mdash; ${cities[cities.length - 1]}`;
     }
     return result;
   }
@@ -27,12 +27,12 @@ export default class TripInfo extends AbstractComponent {
   getTemplate() {
     return `
       <div class="trip-info__main"> 
-        ${this._cards.length ? `${this.getRouteTemplate(this._cards)}` : ``}
+        <h1 class="trip-info__title">${this._cards.length ? `${this.getRouteTemplate(this._cards)}` : ``}</h1>
         <p class="trip-info__dates">
         ${this._cards.length ? `
-          ${monthNames[new Date(this._cards[0].startTime).getMonth()]} ${new Date(this._cards[0].startTime).getDay()}
+          ${monthNames[new Date(this._cards[0].startTime).getMonth()]} ${new Date(this._cards[0].startTime).getDate()}
           &nbsp;&mdash;&nbsp;
-          ${monthNames[new Date(this._cards[this._cards.length - 1].endTime).getMonth()]} ${new Date(this._cards[this._cards.length - 1].endTime).getDay()}` : ``}
+          ${monthNames[new Date(this._cards[this._cards.length - 1].endTime).getMonth()]} ${new Date(this._cards[this._cards.length - 1].endTime).getDate()}` : ``}
         </p>
       </div>`.trim();
   }

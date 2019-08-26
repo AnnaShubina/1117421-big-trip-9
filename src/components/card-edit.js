@@ -14,7 +14,7 @@ export default class CardEdit extends AbstractComponent {
   }
 
   getTime(time) {
-    return `${time.getDay()}/${time.getMonth()}/${time.getYear()} ${time.getHours()}:${time.getMinutes()}`;
+    return `${time.getDate()}/${time.getMonth()}/${time.getYear()} ${time.getHours()}:${time.getMinutes()}`;
   }
 
   getTemplate() {

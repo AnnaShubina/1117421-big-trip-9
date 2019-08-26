@@ -20,6 +20,11 @@ const Position = {
   BEFORE: `before`
 };
 
+const KeyCode = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`
+};
+
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -49,4 +54,4 @@ const unrender = (element) => {
   }
 };
 
-export {monthNames, Position, createElement, render, unrender};
+export {monthNames, Position, KeyCode, createElement, render, unrender};

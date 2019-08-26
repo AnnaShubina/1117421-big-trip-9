@@ -14,7 +14,7 @@ export default class Card extends AbstractComponent {
   getDuration(start, end) {
     let minutes = Math.abs(end.getMinutes() - start.getMinutes());
     let hours = Math.abs(end.getHours() - start.getHours());
-    let days = Math.abs(end.getDay() - start.getDay());
+    let days = Math.abs(end.getDate() - start.getDate());
     days = (days < 10) ? `0${days}` : days;
     hours = (hours < 10) ? `0${hours}` : hours;
     minutes = (minutes < 10) ? `0${minutes}` : minutes;

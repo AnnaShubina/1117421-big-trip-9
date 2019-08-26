@@ -1,11 +1,9 @@
-import Sorting from "../components/sorting";
-import CardEdit from "../components/card-edit";
-import DayList from "../components/day-list";
-import Day from "../components/day";
-import CardList from "../components/card-list";
-import CardContainer from "../components/card-container";
-import Card from "../components/card";
-import {Position, render} from "../utils.js";
+import Sorting from "../components/sorting.js";
+import Card from "../components/card.js";
+import CardEdit from "../components/card-edit.js";
+import Day from "../components/day.js";
+import DayList from "../components/day-list.js";
+import {Position, KeyCode, render} from "../utils.js";
 
 export default class TripController {
   constructor(container, cards) {
@@ -13,37 +11,55 @@ export default class TripController {
     this._cards = cards;
     this._dayList = new DayList();
     this._sorting = new Sorting();
-    this._day = new Day();
-    this._cardList = new CardList();
   }
 
   init() {
     if (this._cards.length) {
-      render(this._container, this._sorting.getElement(), Position.BEFOREEND);
-      render(this._container, this._dayList.getElement(), Position.BEFOREEND);
-      render(this._dayList.getElement(), this._day.getElement(), Position.BEFOREEND);
-      render(this._day.getElement(), this._cardList.getElement(), Position.BEFOREEND);
-
-      this._cards.forEach((card) => {
-        this._renderCard(card);
-      });
+      this._renderContent();
     } else {
-      this._container.insertAdjacentHTML(`beforeend`, `<p class="trip-events__msg">Click New Event to create your first point</p>`);
+      this._renderEmptyMessage();
     }
     this._getTotalSum(this._cards);
   }
 
-  _renderCard(cardMock) {
-    const cardContainer = new CardContainer();
+  _renderContent() {
+    render(this._container, this._sorting.getElement(), Position.BEFOREEND);
+    render(this._container, this._dayList.getElement(), Position.BEFOREEND);
+    this._renderDayList();
+  }
+
+  _renderDayList() {
+    const cardEventsByDate = this._cards.reduce((day, card) => {
+      if (day[card.startTime]) {
+        day[card.startTime].push(card);
+      } else {
+        day[card.startTime] = [card];
+      }
+
+      return day;
+    }, {});
+
+    Object.entries(cardEventsByDate).forEach(([date, cards], i) => {
+      const day = new Day(date, i, cards);
+
+      cards.forEach((card, j) => {
+        const cardContainer = day.getElement().querySelectorAll(`.trip-events__item`)[j];
+        this._renderCard(cardContainer, card);
+      });
+
+      render(this._dayList.getElement(), day.getElement(), Position.BEFOREEND);
+    });
+  }
+
+  _renderCard(container, cardMock) {
     const card = new Card(cardMock);
     const cardEdit = new CardEdit(cardMock);
     const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
+      if (evt.key === KeyCode.ESCAPE || evt.key === KeyCode.ESC) {
         container.replaceChild(card.getElement(), cardEdit.getElement());
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
-    let container;
 
     card.getElement()
       .querySelector(`.event__rollup-btn`)
@@ -58,8 +74,6 @@ export default class TripController {
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
 
-    render(this._cardList.getElement(), cardContainer.getElement(), Position.BEFOREEND);
-    container = this._cardList.getElement().querySelector(`.trip-events__item:last-child`);
     render(container, card.getElement(), Position.BEFOREEND);
   }
 
@@ -79,5 +93,9 @@ export default class TripController {
     const result = sumMain + sumAdd;
     const costContainer = document.querySelector(`.trip-info__cost-value`);
     costContainer.innerHTML = result;
+  }
+
+  _renderEmptyMessage() {
+    this._container.insertAdjacentHTML(`beforeend`, `<p class="trip-events__msg">Click New Event to create your first point</p>`);
   }
 }
