@@ -1,8 +1,8 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from '../components/absctract-component.js';
 
-export default class CardEdit {
+export default class CardEdit extends AbstractComponent {
   constructor({type, city, startTime, endTime, price, offers, pictures, description}) {
-    this._element = null;
+    super();
     this._type = type;
     this._city = city;
     this._startTime = new Date(startTime);
@@ -14,19 +14,7 @@ export default class CardEdit {
   }
 
   getTime(time) {
-    return `${time.getDay()}/${time.getMonth()}/${time.getYear()} ${time.getHours()}:${time.getMinutes()}`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return `${time.getDate()}/${time.getMonth()}/${time.getYear()} ${time.getHours()}:${time.getMinutes()}`;
   }
 
   getTemplate() {

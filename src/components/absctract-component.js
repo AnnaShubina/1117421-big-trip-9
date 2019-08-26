@@ -1,6 +1,6 @@
 import {createElement} from '../utils.js';
 
-export default class CardList {
+export default class AbstractComponent {
   constructor() {
     this._element = null;
   }
@@ -18,9 +18,6 @@ export default class CardList {
   }
 
   getTemplate() {
-    return `
-      <ul class="trip-events__list">
-      </ul>
-    `.trim();
+    throw Error(`Abstract method not implemented`);
   }
 }

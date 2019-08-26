@@ -1,8 +1,9 @@
-import {monthNames, createElement} from '../utils.js';
+import {monthNames} from '../utils.js';
+import AbstractComponent from '../components/absctract-component.js';
 
-export default class TripInfo {
+export default class TripInfo extends AbstractComponent {
   constructor(cards) {
-    this._element = null;
+    super();
     this._cards = cards;
   }
 
@@ -12,37 +13,26 @@ export default class TripInfo {
     let result;
     switch (count) {
       case 2:
-        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ${cities[1]}</h1>`;
+        result = `${cities[0]} &mdash; ${cities[1]}`;
         break;
       case 3:
-        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ${cities[1]} &mdash; ${cities[2]}</h1>`;
+        result = `${cities[0]} &mdash; ${cities[1]} &mdash; ${cities[2]}`;
         break;
       default:
-        result = `<h1 class="trip-info__title">${cities[0]} &mdash; ... &mdash; ${cities[cities.length - 1]}</h1>`;
+        result = `${cities[0]} &mdash; ... &mdash; ${cities[cities.length - 1]}`;
     }
     return result;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 
   getTemplate() {
     return `
       <div class="trip-info__main"> 
-        ${this.getRouteTemplate(this._cards)}
+        <h1 class="trip-info__title">${this._cards.length ? `${this.getRouteTemplate(this._cards)}` : ``}</h1>
         <p class="trip-info__dates">
-        ${monthNames[new Date(this._cards[0].startTime).getMonth()]} ${new Date(this._cards[0].startTime).getDay()}
-        &nbsp;&mdash;&nbsp;
-        ${monthNames[new Date(this._cards[this._cards.length - 1].endTime).getMonth()]} ${new Date(this._cards[this._cards.length - 1].endTime).getDay()}
+        ${this._cards.length ? `
+          ${monthNames[new Date(this._cards[0].startTime).getMonth()]} ${new Date(this._cards[0].startTime).getDate()}
+          &nbsp;&mdash;&nbsp;
+          ${monthNames[new Date(this._cards[this._cards.length - 1].endTime).getMonth()]} ${new Date(this._cards[this._cards.length - 1].endTime).getDate()}` : ``}
         </p>
       </div>`.trim();
   }
