@@ -20,6 +20,7 @@ export default class TripController {
       this._renderEmptyMessage();
     }
     this._getTotalSum(this._cards);
+    this._sorting.getElement().addEventListener(`click`, (evt) => this._onSortClick(evt));
   }
 
   _renderContent() {
@@ -29,6 +30,7 @@ export default class TripController {
   }
 
   _renderDayList() {
+    document.querySelector(`.trip-sort__item--day`).innerHTML = `Day`;
     const cardEventsByDate = this._cards.reduce((day, card) => {
       if (day[card.startTime]) {
         day[card.startTime].push(card);
@@ -40,15 +42,20 @@ export default class TripController {
     }, {});
 
     Object.entries(cardEventsByDate).forEach(([date, cards], i) => {
-      const day = new Day(date, i, cards);
-
-      cards.forEach((card, j) => {
-        const cardContainer = day.getElement().querySelectorAll(`.trip-events__item`)[j];
-        this._renderCard(cardContainer, card);
-      });
-
-      render(this._dayList.getElement(), day.getElement(), Position.BEFOREEND);
+      const sortedByStartTimeCards = cards.slice().sort((a, b) => a.startTime - b.startTime);
+      this._renderCardList(sortedByStartTimeCards, date, i);
     });
+  }
+
+  _renderCardList(cards, date, number) {
+    const day = new Day(cards, date, number);
+
+    cards.forEach((card, i) => {
+      const cardContainer = day.getElement().querySelectorAll(`.trip-events__item`)[i];
+      this._renderCard(cardContainer, card);
+    });
+
+    render(this._dayList.getElement(), day.getElement(), Position.BEFOREEND);
   }
 
   _renderCard(container, cardMock) {
@@ -75,6 +82,29 @@ export default class TripController {
       });
 
     render(container, card.getElement(), Position.BEFOREEND);
+  }
+
+  _onSortClick(evt) {
+    if (evt.target.tagName !== `LABEL`) {
+      return;
+    }
+
+    this._dayList.getElement().innerHTML = ``;
+    document.querySelector(`.trip-sort__item--day`).innerHTML = ``;
+
+    switch (evt.target.dataset.sortType) {
+      case `time`:
+        const sortedByTimeCards = this._cards.slice().sort((a, b) => a.startTime - b.startTime);
+        this._renderCardList(sortedByTimeCards);
+        break;
+      case `price`:
+        const sortedByPriceCards = this._cards.slice().sort((a, b) => a.price - b.price);
+        this._renderCardList(sortedByPriceCards);
+        break;
+      case `default`:
+        this._renderDayList();
+        break;
+    }
   }
 
   _getTotalSum(cardsItems) {
