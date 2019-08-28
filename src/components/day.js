@@ -2,21 +2,20 @@ import AbstractComponent from '../components/absctract-component.js';
 import {monthNames} from '../utils.js';
 
 export default class Day extends AbstractComponent {
-  constructor(cards, date, number) {
+  constructor(cards, date) {
     super();
-    this._date = new Date(+date);
+    this._date = date;
     this._cards = cards;
-    this._number = number;
   }
 
   getTemplate() {
     return `
       <li class="trip-days__item  day">
         <div class="day__info">
-          ${this._number !== undefined ? `
-          <span class="day__counter">${this._number + 1}</span>
-          <time class="day__date" datetime="${this._date.toISOString().split(`T`)[0]}">
-            ${monthNames[this._date.getMonth()]} ${this._date.getDate()}
+          ${this._date !== undefined ? `
+          <span class="day__counter">${new Date(+this._date).getDate()}</span>
+          <time class="day__date" datetime="${new Date(+this._date).toISOString().split(`T`)[0]}">
+            ${monthNames[new Date(+this._date).getMonth()]}
           </time>` : ``}
         </div>
         <ul class="trip-events__list">

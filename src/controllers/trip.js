@@ -30,7 +30,7 @@ export default class TripController {
   }
 
   _renderDayList() {
-    document.querySelector(`.trip-sort__item--day`).innerHTML = `Day`;
+    document.querySelector(`#sort-day`).classList.remove(`visually-hidden`);
     const cardEventsByDate = this._cards.reduce((day, card) => {
       if (day[card.startTime]) {
         day[card.startTime].push(card);
@@ -41,14 +41,14 @@ export default class TripController {
       return day;
     }, {});
 
-    Object.entries(cardEventsByDate).forEach(([date, cards], i) => {
+    Object.entries(cardEventsByDate).forEach(([date, cards]) => {
       const sortedByStartTimeCards = cards.slice().sort((a, b) => a.startTime - b.startTime);
-      this._renderCardList(sortedByStartTimeCards, date, i);
+      this._renderCardList(sortedByStartTimeCards, date);
     });
   }
 
-  _renderCardList(cards, date, number) {
-    const day = new Day(cards, date, number);
+  _renderCardList(cards, date) {
+    const day = new Day(cards, date);
 
     cards.forEach((card, i) => {
       const cardContainer = day.getElement().querySelectorAll(`.trip-events__item`)[i];
@@ -90,7 +90,7 @@ export default class TripController {
     }
 
     this._dayList.getElement().innerHTML = ``;
-    document.querySelector(`.trip-sort__item--day`).innerHTML = ``;
+    document.querySelector(`#sort-day`).classList.add(`visually-hidden`);
 
     switch (evt.target.dataset.sortType) {
       case `time`:
