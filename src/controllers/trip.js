@@ -3,7 +3,8 @@ import Card from "../components/card.js";
 import CardEdit from "../components/card-edit.js";
 import Day from "../components/day.js";
 import DayList from "../components/day-list.js";
-import {Position, KeyCode, render} from "../utils.js";
+import {Position, KeyCode, render, unrender} from "../utils.js";
+import {types, cities} from '../mocks/card.js'
 
 export default class TripController {
   constructor(container, cards) {
@@ -15,7 +16,7 @@ export default class TripController {
 
   init() {
     if (this._cards.length) {
-      this._renderContent();
+      this._renderContent(this._cards);
     } else {
       this._renderEmptyMessage();
     }
@@ -23,15 +24,18 @@ export default class TripController {
     this._sorting.getElement().addEventListener(`click`, (evt) => this._onSortClick(evt));
   }
 
-  _renderContent() {
+  _renderContent(cards) {
+    unrender(this._dayList.getElement());
+    this._dayList.removeElement();
+
     render(this._container, this._sorting.getElement(), Position.BEFOREEND);
     render(this._container, this._dayList.getElement(), Position.BEFOREEND);
-    this._renderDayList();
+    this._renderDayList(cards);
   }
 
-  _renderDayList() {
+  _renderDayList(cards) {
     document.querySelector(`#sort-day`).classList.remove(`visually-hidden`);
-    const cardEventsByDate = this._cards.reduce((day, card) => {
+    const cardEventsByDate = cards.reduce((day, card) => {
       if (day[card.startTime]) {
         day[card.startTime].push(card);
       } else {
@@ -61,6 +65,7 @@ export default class TripController {
   _renderCard(container, cardMock) {
     const card = new Card(cardMock);
     const cardEdit = new CardEdit(cardMock);
+
     const onEscKeyDown = (evt) => {
       if (evt.key === KeyCode.ESCAPE || evt.key === KeyCode.ESC) {
         container.replaceChild(card.getElement(), cardEdit.getElement());
@@ -76,8 +81,22 @@ export default class TripController {
       });
 
     cardEdit.getElement()
-      .addEventListener(`submit`, () => {
-        container.replaceChild(card.getElement(), cardEdit.getElement());
+      .addEventListener(`submit`, (evt) => {
+        evt.preventDefault();
+      
+        const formData = new FormData(cardEdit.getElement());
+        const entry = {
+          type: types[types.findIndex((it) => it.id === formData.get(`event-type`))],
+          city: cities[cities.findIndex((it) => it.name === formData.get(`event-destination`))],
+          startTime: new Date(formData.get(`event-start-time`)),
+          endTime: new Date(formData.get(`event-end-time`)),
+          price: formData.get(`event-price`)
+        };
+        console.log(entry);
+        this._cards[this._cards.findIndex((it) => it === cardMock)] = entry;
+        
+        this._renderContent(this._cards);
+
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
 
@@ -111,7 +130,7 @@ export default class TripController {
     const sumMain = cardsItems.map(({price}) => price).reduce((sum, current) => {
       return sum + current;
     }, 0);
-    const allOffers = cardsItems.map(({offers}) => Array.from(offers));
+    const allOffers = cardsItems.map(({type}) => type.offers);
     const appliedOffers = allOffers.map((item) => item.filter(({isApplied}) => isApplied));
     const offersPrices = appliedOffers.map((items) => items.map((item) => item.price));
     const offersPricesTotals = offersPrices.map((prices) => prices.reduce((sum, current) => {

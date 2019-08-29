@@ -1,16 +1,17 @@
 import AbstractComponent from '../components/absctract-component.js';
+import {types, cities} from '../mocks/card.js'
 
 export default class CardEdit extends AbstractComponent {
-  constructor({type, city, startTime, endTime, price, offers, pictures, description}) {
+  constructor({type, city, startTime, endTime, price}) {
     super();
     this._type = type;
-    this._city = city;
+    this._city = city.name;
     this._startTime = new Date(startTime);
     this._endTime = new Date(endTime);
     this._price = price;
-    this._offers = offers;
-    this._pictures = pictures;
-    this._description = description;
+    this._offers = this._type.offers;
+    this._pictures = city.pictures;
+    this._description = city.description;
   }
 
   getTime(time) {
@@ -27,6 +28,30 @@ export default class CardEdit extends AbstractComponent {
             <img class="event__type-icon" width="17" height="17" src="img/icons/${this._type.id}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+
+          <div class="event__type-list">
+            <fieldset class="event__type-group">
+              <legend class="visually-hidden">Transfer</legend>
+              ${types.filter((type) => type.placeholder === `to`).map(({id, title}) => `
+                <div class="event__type-item">
+                  <input id="event-type-${id}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${id}" 
+                  ${this._type.id === id ? `checked` : ``}>
+                  <label class="event__type-label  event__type-label--${id}" for="event-type-${id}-1">${title}</label>
+                </div>
+              `).join(``)}
+            </fieldset>
+
+            <fieldset class="event__type-group">
+              <legend class="visually-hidden">Activity</legend>
+              ${types.filter((type) => type.placeholder === `in`).map(({id, title}) => `
+                <div class="event__type-item">
+                  <input id="event-type-${id}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${id}"
+                  ${this._type.id === id ? `checked` : ``}>
+                  <label class="event__type-label  event__type-label--${id}" for="event-type-${id}-1">${title}</label>
+                </div>
+              `).join(``)}
+            </fieldset>
+          </div>
         </div>
   
         <div class="event__field-group  event__field-group--destination">
@@ -34,7 +59,11 @@ export default class CardEdit extends AbstractComponent {
             ${this._type.title} ${this._type.placeholder}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city}" list="destination-list-1">
-          <datalist id="destination-list-1"></datalist>
+          <datalist id="destination-list-1">
+            ${cities.map(({name}) => `
+              <option value="${name}"></option>
+            `).join(``)}
+          </datalist>
         </div>
   
         <div class="event__field-group  event__field-group--time">
@@ -76,26 +105,30 @@ export default class CardEdit extends AbstractComponent {
       </header>
   
       <section class="event__details">
-  
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-  
-          <div class="event__available-offers">
-          ${Array.from(this._offers).map(({title, price: amount}) => `
-            <div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-              <label class="event__offer-label" for="event-offer-luggage-1">
-                <span class="event__offer-title">${title}</span>
-                &plus;
-                &euro;&nbsp;<span class="event__offer-price">${amount}</span>
-              </label>
-            </div>`).join(``)}
-          </div>
-        </section>
+          ${this._offers.length ? `
+            ${
+              `<section class="event__section  event__section--offers">
+                  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+                  <div class="event__available-offers">
+                    ${this._offers.map(({title, price: amount, isApplied}) => `
+                      <div class="event__offer-selector">
+                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" 
+                        type="checkbox" name="event-offer-luggage"
+                        ${isApplied ? `checked` : ``}>
+                        <label class="event__offer-label" for="event-offer-luggage-1">
+                          <span class="event__offer-title">${title}</span>
+                          &plus;
+                          &euro;&nbsp;<span class="event__offer-price">${amount}</span>
+                        </label>
+                      </div>`).join(``)}
+                  </div>
+                </section>`
+            }
+          ` : ``}
   
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${this._description.join(``)}</p>
+          <p class="event__destination-description">${this._description}</p>
   
           <div class="event__photos-container">
             <div class="event__photos-tape">
