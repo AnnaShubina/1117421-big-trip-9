@@ -1,5 +1,6 @@
 import AbstractComponent from '../components/absctract-component.js';
-import {types, cities} from '../mocks/card.js'
+import {types, cities} from '../mocks/card.js';
+import {Position, render} from '../utils.js';
 
 export default class CardEdit extends AbstractComponent {
   constructor({type, city, startTime, endTime, price}) {
@@ -12,6 +13,8 @@ export default class CardEdit extends AbstractComponent {
     this._offers = this._type.offers;
     this._pictures = city.pictures;
     this._description = city.description;
+
+    this._subscribeOnEvents();
   }
 
   getTime(time) {
@@ -138,5 +141,57 @@ export default class CardEdit extends AbstractComponent {
         </section>
       </section>
     </form>`.trim();
+  }
+
+  _subscribeOnEvents() {
+    this._onTypeSelect();
+    this._onCitySelect();
+  }
+
+  _onTypeSelect() {
+    this.getElement()
+    .querySelectorAll(`.event__type-group`).forEach((element) => {
+      element.addEventListener(`click`, (evt) => {
+        if (evt.target.value) {
+          const type = types[types.findIndex((it) => it.id === evt.target.value)];
+          this.getElement().querySelector(`.event__label`).innerHTML = `${type.title} ${type.placeholder}`;
+          this.getElement().querySelector(`.event__type-icon`).src = `img/icons/${type.id}.png`;
+          const offersContainer =  this.getElement().querySelector(`.event__section--offers`);
+          const offersHTML = `<section class="event__section  event__section--offers">
+            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+            <div class="event__available-offers">
+            ${type.offers.map(({title, price}) => `
+              <div class="event__offer-selector">
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" 
+                type="checkbox" name="event-offer-luggage">
+                <label class="event__offer-label" for="event-offer-luggage-1">
+                  <span class="event__offer-title">${title}</span>
+                  &plus;
+                  &euro;&nbsp;<span class="event__offer-price">${price}</span>
+                </label>
+              </div>`).join(``)}
+            </div>
+          </section>`;
+          if (type.offers.length) {
+            if (offersContainer) {
+              offersContainer.innerHTML = offersHTML
+
+            } else {
+              this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, offersHTML);
+            }
+          } else  {
+            offersContainer.remove();
+          }
+        }
+      });
+    });
+  }
+
+  _onCitySelect() {
+    this.getElement()
+    .querySelector(`input[name='event-destination']`).addEventListener(`change`, (evt) => {
+      const city = cities[cities.findIndex((it) => it.name === evt.target.value)];
+      this.getElement().querySelector(`.event__destination-description`).innerHTML = `${city.description}`;
+    });
   }
 }

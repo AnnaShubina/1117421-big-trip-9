@@ -1,10 +1,8 @@
 import Sorting from "../components/sorting.js";
-import Card from "../components/card.js";
-import CardEdit from "../components/card-edit.js";
 import Day from "../components/day.js";
 import DayList from "../components/day-list.js";
-import {Position, KeyCode, render, unrender} from "../utils.js";
-import {types, cities} from '../mocks/card.js'
+import CardController from "../controllers/card.js";
+import {Position, render, unrender} from "../utils.js";
 
 export default class TripController {
   constructor(container, cards) {
@@ -12,11 +10,15 @@ export default class TripController {
     this._cards = cards;
     this._dayList = new DayList();
     this._sorting = new Sorting();
+    this._subscriptions = [];
+    this._onChangeView = this._onChangeView.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
   }
 
   init() {
     if (this._cards.length) {
-      this._renderContent(this._cards);
+      render(this._container, this._sorting.getElement(), Position.BEFOREEND);
+      this._renderDayList(this._cards);
     } else {
       this._renderEmptyMessage();
     }
@@ -24,17 +26,13 @@ export default class TripController {
     this._sorting.getElement().addEventListener(`click`, (evt) => this._onSortClick(evt));
   }
 
-  _renderContent(cards) {
-    unrender(this._dayList.getElement());
-    this._dayList.removeElement();
-
-    render(this._container, this._sorting.getElement(), Position.BEFOREEND);
-    render(this._container, this._dayList.getElement(), Position.BEFOREEND);
-    this._renderDayList(cards);
-  }
-
   _renderDayList(cards) {
+    this._clearDayList();
+
+    render(this._container, this._dayList.getElement(), Position.BEFOREEND);
     document.querySelector(`#sort-day`).classList.remove(`visually-hidden`);
+
+
     const cardEventsByDate = cards.reduce((day, card) => {
       if (day[card.startTime]) {
         day[card.startTime].push(card);
@@ -63,44 +61,17 @@ export default class TripController {
   }
 
   _renderCard(container, cardMock) {
-    const card = new Card(cardMock);
-    const cardEdit = new CardEdit(cardMock);
+    const cardController = new CardController(container, cardMock, this._onDataChange, this._onChangeView);
+    this._subscriptions.push(cardController.setDefaultView.bind(cardController));
+  }
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === KeyCode.ESCAPE || evt.key === KeyCode.ESC) {
-        container.replaceChild(card.getElement(), cardEdit.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
+  _onDataChange(newData, oldData) {
+    this._cards[this._cards.findIndex((it) => it === oldData)] = newData;
+    this._renderDayList(this._cards);
+  }
 
-    card.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, () => {
-        container.replaceChild(cardEdit.getElement(), card.getElement());
-        document.addEventListener(`keydown`, onEscKeyDown);
-      });
-
-    cardEdit.getElement()
-      .addEventListener(`submit`, (evt) => {
-        evt.preventDefault();
-      
-        const formData = new FormData(cardEdit.getElement());
-        const entry = {
-          type: types[types.findIndex((it) => it.id === formData.get(`event-type`))],
-          city: cities[cities.findIndex((it) => it.name === formData.get(`event-destination`))],
-          startTime: new Date(formData.get(`event-start-time`)),
-          endTime: new Date(formData.get(`event-end-time`)),
-          price: formData.get(`event-price`)
-        };
-        console.log(entry);
-        this._cards[this._cards.findIndex((it) => it === cardMock)] = entry;
-        
-        this._renderContent(this._cards);
-
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-
-    render(container, card.getElement(), Position.BEFOREEND);
+  _onChangeView() {
+    this._subscriptions.forEach((it) => it());
   }
 
   _onSortClick(evt) {
@@ -121,7 +92,7 @@ export default class TripController {
         this._renderCardList(sortedByPriceCards);
         break;
       case `default`:
-        this._renderDayList();
+        this._renderDayList(this._cards);
         break;
     }
   }
@@ -146,5 +117,10 @@ export default class TripController {
 
   _renderEmptyMessage() {
     this._container.insertAdjacentHTML(`beforeend`, `<p class="trip-events__msg">Click New Event to create your first point</p>`);
+  }
+
+  _clearDayList() {
+    unrender(this._dayList.getElement());
+    this._dayList.removeElement();
   }
 }
