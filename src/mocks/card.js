@@ -161,31 +161,30 @@ const types = [{
 ];
 
 const cities = [{
-    name: `Amsterdam`,
-    description: `Amsterdam Amsterdam is the capital and largest city of Netherlands. Population -743, 400 people Area -219 km ² Amsterdam is located in the north-west of the Netherlands in the province of North Holland at the mouth of the Amstel River in the Bay Eysselmer.`,
-    pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`), 
-  },
-  {
-    name: `Geneva`,
-    description: `Geneva. The small urban gem at the gateway to the mountains boasts landscapes to take your breath away! Follow this article and make sure you don’t miss any of the city’s most beautiful spots!`,
-    pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`), 
-  },
-  {
-    name: `Barcelona`,
-    description: `Catalonia and Barcelona has become one of the first tourist destination of Spain, it has everything to please the majority of visitors : with a history among the oldest in Europe, a capital, Barcelona, which never sleeps and an inland full of charm not to forget beautiful beaches in La Costa Brava. The variety of artistic treasures, the Romanesque churches and the great names in modern art and architecture`,
-    pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`), 
-  },
-  {
-    name: `Dresden`,
-    description: `The name of Dresden is a synonym for art and culture. The Saxon capital offers cultural and art treasures of European rank, world-famous art collections and also a lively theatre and music scene.`,
-    pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`), 
-  },
-  {
-    name: `Praha`,
-    description: `The story of Prague is no less turbulent than that of similarly large cities in Central Europe. It saw its first golden age under the rule of Charles IV in the 14th century. Prague was, at that time, the third largest city in Europe and witnessed something of an explosion in construction: the Charles University, the New Town, the Charles Bridge, and Saint Vitus Cathedral were all built during this period.`,
-    pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`), 
-  }
-]
+  name: `Amsterdam`,
+  description: `Amsterdam Amsterdam is the capital and largest city of Netherlands. Population -743, 400 people Area -219 km ² Amsterdam is located in the north-west of the Netherlands in the province of North Holland at the mouth of the Amstel River in the Bay Eysselmer.`,
+  pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`),
+},
+{
+  name: `Geneva`,
+  description: `Geneva. The small urban gem at the gateway to the mountains boasts landscapes to take your breath away! Follow this article and make sure you don’t miss any of the city’s most beautiful spots!`,
+  pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`),
+},
+{
+  name: `Barcelona`,
+  description: `Catalonia and Barcelona has become one of the first tourist destination of Spain, it has everything to please the majority of visitors : with a history among the oldest in Europe, a capital, Barcelona, which never sleeps and an inland full of charm not to forget beautiful beaches in La Costa Brava. The variety of artistic treasures, the Romanesque churches and the great names in modern art and architecture`,
+  pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`),
+},
+{
+  name: `Dresden`,
+  description: `The name of Dresden is a synonym for art and culture. The Saxon capital offers cultural and art treasures of European rank, world-famous art collections and also a lively theatre and music scene.`,
+  pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`),
+},
+{
+  name: `Praha`,
+  description: `The story of Prague is no less turbulent than that of similarly large cities in Central Europe. It saw its first golden age under the rule of Charles IV in the 14th century. Prague was, at that time, the third largest city in Europe and witnessed something of an explosion in construction: the Charles University, the New Town, the Charles Bridge, and Saint Vitus Cathedral were all built during this period.`,
+  pictures: new Array(COUNT_PICTURE).fill(``).map(() => `http://picsum.photos/300/150?r=${Math.random()}`),
+}];
 
 const getCard = () => ({
   type: types[Math.floor(Math.random() * 10)],

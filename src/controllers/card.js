@@ -1,7 +1,7 @@
 import Card from "../components/card.js";
 import CardEdit from "../components/card-edit.js";
 import {Position, KeyCode, render} from '../utils.js';
-import {types, cities} from '../mocks/card.js'
+import {types, cities} from '../mocks/card.js';
 
 export default class CardController {
   constructor(container, data, onDataChange, onChangeView) {
@@ -50,7 +50,13 @@ export default class CardController {
           endTime: new Date(formData.get(`event-end-time`)),
           price: formData.get(`event-price`)
         };
-        entry.type.offers.forEach((it) => formData.get(`event-offer-${it.id}`) ? it.isApplied = true : it.isApplied = false);
+        entry.type.offers.forEach((it) => {
+          if (formData.get(`event-offer-${it.id}`)) {
+            it.isApplied = true;
+          } else {
+            it.isApplied = false;
+          }
+        });
 
         this._onDataChange(entry, this._data);
         document.removeEventListener(`keydown`, onEscKeyDown);

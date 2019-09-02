@@ -56,8 +56,7 @@ export default class Card extends AbstractComponent {
   
         <h4 class="visually-hidden">Offers:</h4>
         ${this._offers.length ? `
-          ${
-            `<ul class="event__selected-offers">
+          ${`<ul class="event__selected-offers">
               ${this._offers.filter(({isApplied}) => isApplied).map(({title, price: amount}, i) => i < 2 ? `
               <li class="event__offer">
                 <span class="event__offer-title">${title}</span>
@@ -65,9 +64,7 @@ export default class Card extends AbstractComponent {
                 &euro;&nbsp;<span class="event__offer-price">${amount}</span>
               </li>
               ` : ``).join(``)}
-            </ul>`
-          }
-        ` : ``}
+            </ul>`}` : ``}
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>

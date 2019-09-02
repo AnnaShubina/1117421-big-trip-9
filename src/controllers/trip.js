@@ -43,8 +43,8 @@ export default class TripController {
       return day;
     }, {});
 
-    Object.entries(cardEventsByDate).forEach(([date, cards]) => {
-      const sortedByStartTimeCards = cards.slice().sort((a, b) => b.startTime - a.startTime);
+    Object.entries(cardEventsByDate).forEach(([date, cardsItems]) => {
+      const sortedByStartTimeCards = cardsItems.slice().sort((a, b) => b.startTime - a.startTime);
       this._renderCardList(sortedByStartTimeCards, date);
     });
   }

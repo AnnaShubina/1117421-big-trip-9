@@ -1,6 +1,6 @@
 import AbstractComponent from '../components/absctract-component.js';
 import {types, cities} from '../mocks/card.js';
-import {Position, render} from '../utils.js';
+import {Position} from '../utils.js';
 
 export default class CardEdit extends AbstractComponent {
   constructor({type, city, startTime, endTime, price}) {
@@ -109,8 +109,7 @@ export default class CardEdit extends AbstractComponent {
   
       <section class="event__details">
           ${this._offers.length ? `
-            ${
-              `<section class="event__section  event__section--offers">
+            ${`<section class="event__section  event__section--offers">
                   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                   <div class="event__available-offers">
                     ${this._offers.map(({id, title, price: amount, isApplied}) => `
@@ -125,9 +124,7 @@ export default class CardEdit extends AbstractComponent {
                         </label>
                       </div>`).join(``)}
                   </div>
-                </section>`
-            }
-          ` : ``}
+                </section>`}` : ``}
   
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -156,7 +153,7 @@ export default class CardEdit extends AbstractComponent {
           const type = types[types.findIndex((it) => it.id === evt.target.value)];
           this.getElement().querySelector(`.event__label`).innerHTML = `${type.title} ${type.placeholder}`;
           this.getElement().querySelector(`.event__type-icon`).src = `img/icons/${type.id}.png`;
-          const offersContainer =  this.getElement().querySelector(`.event__section--offers`);
+          const offersContainer = this.getElement().querySelector(`.event__section--offers`);
           const offersHTML = `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
@@ -174,12 +171,11 @@ export default class CardEdit extends AbstractComponent {
           </section>`;
           if (type.offers.length) {
             if (offersContainer) {
-              offersContainer.innerHTML = offersHTML
-
+              offersContainer.innerHTML = offersHTML;
             } else {
               this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, offersHTML);
             }
-          } else  {
+          } else {
             offersContainer.remove();
           }
         }
