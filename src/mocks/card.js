@@ -6,10 +6,12 @@ const types = [{
   title: `Taxi`,
   placeholder: `to`,
   offers: [{
+    id: `taxi-uber`,
     title: `Choose Uber`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `taxi-yandex`,
     title: `Choose Yandex`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
@@ -20,10 +22,12 @@ const types = [{
   title: `Bus`,
   placeholder: `to`,
   offers: [{
+    id: `bus-seat`,
     title: `Choose seats`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `bus-meal`,
     title: `Add meal`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
@@ -34,18 +38,22 @@ const types = [{
   title: `Train`,
   placeholder: `to`,
   offers: [{
+    id: `train-luggage`,
     title: `Add luggage`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `train-class`,
     title: `Switch to comfort class`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `train-meal`,
     title: `Add meal`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `train-seat`,
     title: `Choose seats`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
@@ -56,14 +64,17 @@ const types = [{
   title: `Flight`,
   placeholder: `to`,
   offers: [{
+    id: `flight-seat`,
     title: `Choose seats`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `flight-meal`,
     title: `Choose meal`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `flight-luggage`,
     title: `Add luggage`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
@@ -80,19 +91,23 @@ const types = [{
   title: `Check-in`,
   placeholder: `in`,
   offers: [{
+    id: `check-in-room`,
     title: `Change room`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `check-in-early`,
     title: `Early check-in`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `check-in-late`,
     title: `Late check-in`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   },
   {
+    id: `check-in-breakfast`,
     title: `Add breakfast`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
@@ -121,19 +136,23 @@ const types = [{
   title: `Restaurant`,
   placeholder: `in`,
   offers: [{
+    id: `restaurant-table`,
     title: `Reserve table`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `restaurant-order`,
     title: `Pre order`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   }, {
+    id: `restaurant-tips`,
     title: `Tips include`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))
   },
   {
+    id: `restaurant-cuisine`,
     title: `Choose cuisine`,
     price: 10 + Math.floor(Math.random() * 10),
     isApplied: Boolean(Math.round(Math.random()))

@@ -44,7 +44,7 @@ export default class TripController {
     }, {});
 
     Object.entries(cardEventsByDate).forEach(([date, cards]) => {
-      const sortedByStartTimeCards = cards.slice().sort((a, b) => a.startTime - b.startTime);
+      const sortedByStartTimeCards = cards.slice().sort((a, b) => b.startTime - a.startTime);
       this._renderCardList(sortedByStartTimeCards, date);
     });
   }

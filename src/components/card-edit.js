@@ -113,12 +113,12 @@ export default class CardEdit extends AbstractComponent {
               `<section class="event__section  event__section--offers">
                   <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                   <div class="event__available-offers">
-                    ${this._offers.map(({title, price: amount, isApplied}) => `
+                    ${this._offers.map(({id, title, price: amount, isApplied}) => `
                       <div class="event__offer-selector">
-                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" 
-                        type="checkbox" name="event-offer-luggage"
+                        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" 
+                        type="checkbox" name="event-offer-${id}"
                         ${isApplied ? `checked` : ``}>
-                        <label class="event__offer-label" for="event-offer-luggage-1">
+                        <label class="event__offer-label" for="event-offer-${id}">
                           <span class="event__offer-title">${title}</span>
                           &plus;
                           &euro;&nbsp;<span class="event__offer-price">${amount}</span>
@@ -160,11 +160,11 @@ export default class CardEdit extends AbstractComponent {
           const offersHTML = `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
-            ${type.offers.map(({title, price}) => `
+            ${type.offers.map(({id, title, price}) => `
               <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" 
-                type="checkbox" name="event-offer-luggage">
-                <label class="event__offer-label" for="event-offer-luggage-1">
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" 
+                type="checkbox" name="event-offer-${id}">
+                <label class="event__offer-label" for="event-offer-${id}">
                   <span class="event__offer-title">${title}</span>
                   &plus;
                   &euro;&nbsp;<span class="event__offer-price">${price}</span>

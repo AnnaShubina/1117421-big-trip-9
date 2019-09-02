@@ -50,6 +50,7 @@ export default class CardController {
           endTime: new Date(formData.get(`event-end-time`)),
           price: formData.get(`event-price`)
         };
+        entry.type.offers.forEach((it) => formData.get(`event-offer-${it.id}`) ? it.isApplied = true : it.isApplied = false);
 
         this._onDataChange(entry, this._data);
         document.removeEventListener(`keydown`, onEscKeyDown);
