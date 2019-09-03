@@ -153,34 +153,38 @@ export default class CardEdit extends AbstractComponent {
           const type = types[types.findIndex((it) => it.id === evt.target.value)];
           this.getElement().querySelector(`.event__label`).innerHTML = `${type.title} ${type.placeholder}`;
           this.getElement().querySelector(`.event__type-icon`).src = `img/icons/${type.id}.png`;
-          const offersContainer = this.getElement().querySelector(`.event__section--offers`);
-          const offersHTML = `<section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-            <div class="event__available-offers">
-            ${type.offers.map(({id, title, price}) => `
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" 
-                type="checkbox" name="event-offer-${id}">
-                <label class="event__offer-label" for="event-offer-${id}">
-                  <span class="event__offer-title">${title}</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${price}</span>
-                </label>
-              </div>`).join(``)}
-            </div>
-          </section>`;
-          if (type.offers.length) {
-            if (offersContainer) {
-              offersContainer.innerHTML = offersHTML;
-            } else {
-              this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, offersHTML);
-            }
-          } else {
-            offersContainer.remove();
-          }
+          this._createOffers(type.offers);
         }
       });
     });
+  }
+
+  _createOffers(offers) {
+    const offersContainer = this.getElement().querySelector(`.event__section--offers`);
+    const offersHTML = `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+      ${offers.map(({id, title, price}) => `
+        <div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" 
+          type="checkbox" name="event-offer-${id}">
+          <label class="event__offer-label" for="event-offer-${id}">
+            <span class="event__offer-title">${title}</span>
+            &plus;
+            &euro;&nbsp;<span class="event__offer-price">${price}</span>
+          </label>
+        </div>`).join(``)}
+      </div>
+    </section>`;
+    if (offers.length) {
+      if (offersContainer) {
+        offersContainer.innerHTML = offersHTML;
+      } else {
+        this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, offersHTML);
+      }
+    } else {
+      offersContainer.remove();
+    }
   }
 
   _onCitySelect() {
