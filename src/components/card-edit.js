@@ -3,22 +3,16 @@ import {types, cities} from '../mocks/card.js';
 import {Position} from '../utils.js';
 
 export default class CardEdit extends AbstractComponent {
-  constructor({type, city, startTime, endTime, price}) {
+  constructor({type, city, price}) {
     super();
     this._type = type;
     this._city = city.name;
-    this._startTime = new Date(startTime);
-    this._endTime = new Date(endTime);
     this._price = price;
     this._offers = this._type.offers;
     this._pictures = city.pictures;
     this._description = city.description;
 
     this._subscribeOnEvents();
-  }
-
-  getTime(time) {
-    return `${time.getDate()}/${time.getMonth()}/${time.getYear()} ${time.getHours()}:${time.getMinutes()}`;
   }
 
   getTemplate() {
@@ -74,13 +68,13 @@ export default class CardEdit extends AbstractComponent {
             From
           </label>
           <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time"
-           value="${this.getTime(this._startTime)}">
+           value="">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
           <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" 
-          value="${this.getTime(this._endTime)}">
+          value="">
         </div>
   
         <div class="event__field-group  event__field-group--price">
