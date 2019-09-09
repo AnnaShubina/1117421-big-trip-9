@@ -6,9 +6,9 @@ import {Position, render, unrender} from "../utils.js";
 import moment from 'moment';
 
 export default class TripController {
-  constructor(container, cards) {
+  constructor(container) {
     this._container = container;
-    this._cards = cards;
+    this._cards = [];
     this._dayList = new DayList();
     this._sorting = new Sorting();
     this._subscriptions = [];
@@ -16,7 +16,21 @@ export default class TripController {
     this._onDataChange = this._onDataChange.bind(this);
   }
 
-  init() {
+  hide() {
+    this._container.classList.add(`visually-hidden`);
+  }
+
+  show(cards) {
+    if (cards && cards !== this._cards) {
+      this._setCards(cards);
+      this._container.classList.remove(`visually-hidden`);
+    } else {
+      this._container.classList.remove(`visually-hidden`);
+    }
+  }
+
+  _setCards(cards) {
+    this._cards = cards;
     if (this._cards.length) {
       render(this._container, this._sorting.getElement(), Position.BEFOREEND);
       this._renderDayList(this._cards);
