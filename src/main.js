@@ -45,5 +45,10 @@ menu.getElement().addEventListener(`click`, (evt) => {
         menu.getElement().querySelector(`#${statisticId}`).classList.add(`trip-tabs__btn--active`);
         break;
     }
-  });
+});
+
+const addTask = document.querySelector(`.trip-main__event-add-btn`);
+addTask.addEventListener(`click`, () => {
+    tripController.createCard();
+});
 

@@ -25,6 +25,11 @@ const KeyCode = {
   ESC: `Esc`
 };
 
+const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
+
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -54,4 +59,4 @@ const unrender = (element) => {
   }
 };
 
-export {monthNames, Position, KeyCode, createElement, render, unrender};
+export {monthNames, Position, Mode, KeyCode, createElement, render, unrender};

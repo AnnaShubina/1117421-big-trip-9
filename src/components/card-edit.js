@@ -6,11 +6,11 @@ export default class CardEdit extends AbstractComponent {
   constructor({type, city, price}) {
     super();
     this._type = type;
-    this._city = city.name;
+    this._city = city.name || ``;
     this._price = price;
-    this._offers = this._type.offers;
-    this._pictures = city.pictures;
-    this._description = city.description;
+    this._offers = this._type.offers || [];
+    this._pictures = city.pictures || [];
+    this._description = city.description || ``;
 
     this._subscribeOnEvents();
   }
@@ -177,7 +177,9 @@ export default class CardEdit extends AbstractComponent {
         this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, offersHTML);
       }
     } else {
-      offersContainer.remove();
+      if (offersContainer) {
+        offersContainer.remove();
+      }
     }
   }
 

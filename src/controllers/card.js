@@ -1,6 +1,6 @@
 import Card from "../components/card.js";
 import CardEdit from "../components/card-edit.js";
-import {Position, KeyCode, render} from '../utils.js';
+import {Position, Mode, KeyCode, render} from '../utils.js';
 import {types, cities} from '../mocks/card.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -8,7 +8,7 @@ import 'flatpickr/dist/themes/light.css';
 import moment from 'moment';
 
 export default class CardController {
-  constructor(container, data, onDataChange, onChangeView) {
+  constructor(container, data, mode, onDataChange, onChangeView) {
     this._container = container;
     this._data = data;
     this._card = new Card(data);
@@ -16,10 +16,18 @@ export default class CardController {
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
 
-    this.init();
+    this.init(mode);
   }
 
-  init() {
+  init(mode) {
+    let renderPosition = Position.BEFOREEND;
+    let currentView = this._card;
+
+    if (mode === Mode.ADDING) {
+      renderPosition = Position.AFTERBEGIN;
+      currentView = this._cardEdit;
+    }
+
     flatpickr(this._cardEdit.getElement().querySelector(`input[name=event-start-time]`), {
       enableTime: true,
       dateFormat: `Y.m.d H:i`,
@@ -34,7 +42,13 @@ export default class CardController {
 
     const onEscKeyDown = (evt) => {
       if (evt.key === KeyCode.ESCAPE || evt.key === KeyCode.ESC) {
-        this._container.replaceChild(this._card.getElement(), this._cardEdit.getElement());
+        if (mode === Mode.DEFAULT) {
+          if (this._container.contains(this._cardEdit.getElement())) {
+            this._container.replaceChild(this._card.getElement(), this._cardEdit.getElement());
+          }
+        } else if (mode === Mode.ADDING) {
+          this._container.removeChild(currentView.getElement());
+        }
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
@@ -54,6 +68,11 @@ export default class CardController {
         document.addEventListener(`keydown`, onEscKeyDown);
       });
 
+    this._cardEdit.getElement().querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, () => {
+        this._onDataChange(null, this._data);
+      });
+
     this._cardEdit.getElement()
       .addEventListener(`submit`, (evt) => {
         evt.preventDefault();
@@ -64,7 +83,7 @@ export default class CardController {
           city: cities[cities.findIndex((it) => it.name === formData.get(`event-destination`))],
           startTime: moment(formData.get(`event-start-time`)).format(),
           endTime: moment(formData.get(`event-end-time`)).format(),
-          price: formData.get(`event-price`)
+          price: +formData.get(`event-price`)
         };
         entry.type.offers.forEach((it) => {
           if (formData.get(`event-offer-${it.id}`)) {
@@ -78,7 +97,7 @@ export default class CardController {
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
 
-    render(this._container, this._card.getElement(), Position.BEFOREEND);
+    render(this._container, currentView.getElement(), renderPosition);
   }
 
   setDefaultView() {
@@ -86,5 +105,4 @@ export default class CardController {
       this._container.replaceChild(this._card.getElement(), this._cardEdit.getElement());
     }
   }
-
 }

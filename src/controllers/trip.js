@@ -2,7 +2,7 @@ import Sorting from "../components/sorting.js";
 import Day from "../components/day.js";
 import DayList from "../components/day-list.js";
 import CardController from "../controllers/card.js";
-import {Position, render, unrender} from "../utils.js";
+import {Position, Mode, render, unrender} from "../utils.js";
 import moment from 'moment';
 
 export default class TripController {
@@ -31,6 +31,8 @@ export default class TripController {
 
   _setCards(cards) {
     this._cards = cards;
+    this._subscriptions = [];
+    this._clearDayList();
     if (this._cards.length) {
       render(this._container, this._sorting.getElement(), Position.BEFOREEND);
       this._renderDayList(this._cards);
@@ -41,9 +43,23 @@ export default class TripController {
     this._sorting.getElement().addEventListener(`click`, (evt) => this._onSortClick(evt));
   }
 
-  _renderDayList(cards) {
-    this._clearDayList();
+  createCard() {
+    const defaultCard = {
+      type: {
+        id: `flight`,
+        title: `Flight`,
+        placeholder: `to`,
+      },
+      city: {},
+      startTime: moment().format(),
+      endTime: moment().format(),
+      price: ``,
+    };
 
+    new CardController(this._dayList.getElement(), defaultCard, Mode.ADDING, this._onDataChange, this._onChangeView);
+  }
+
+  _renderDayList(cards) {
     render(this._container, this._dayList.getElement(), Position.BEFOREEND);
     document.querySelector(`#sort-day`).classList.remove(`visually-hidden`);
 
@@ -94,13 +110,22 @@ export default class TripController {
   }
 
   _renderCard(container, cardMock) {
-    const cardController = new CardController(container, cardMock, this._onDataChange, this._onChangeView);
+    const cardController = new CardController(container, cardMock, Mode.DEFAULT, this._onDataChange, this._onChangeView);
     this._subscriptions.push(cardController.setDefaultView.bind(cardController));
   }
 
   _onDataChange(newData, oldData) {
-    this._cards[this._cards.findIndex((it) => it === oldData)] = newData;
-    this._renderDayList(this._cards);
+    const index = this._cards.findIndex((card) => card === oldData);
+
+    if (newData === null) {
+      this._cards = [...this._cards.slice(0, index), ...this._cards.slice(index + 1)];
+    } else if (oldData === null) {
+      this._cards = [newData, ...this._tasks];
+    } else {
+      this._cards[index] = newData;
+    }
+
+    this._setCards(this._cards);
   }
 
   _onChangeView() {
