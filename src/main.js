@@ -26,29 +26,23 @@ statistics.getElement().classList.add(`visually-hidden`);
 tripController.show(cards);
 
 menu.getElement().addEventListener(`click`, (evt) => {
-    evt.preventDefault();
+  evt.preventDefault();
 
-    const tableId = `table`;
-    const statisticId = `stats`;
-  
-    switch (evt.target.id) {
-      case tableId:
-        statistics.getElement().classList.add(`visually-hidden`);
-        tripController.show();
-        menu.getElement().querySelector(`#${tableId}`).classList.add(`trip-tabs__btn--active`);
-        menu.getElement().querySelector(`#${statisticId}`).classList.remove(`trip-tabs__btn--active`);
-        break;
-      case statisticId:
-        tripController.hide();
-        statistics.getElement().classList.remove(`visually-hidden`);
-        menu.getElement().querySelector(`#${tableId}`).classList.remove(`trip-tabs__btn--active`);
-        menu.getElement().querySelector(`#${statisticId}`).classList.add(`trip-tabs__btn--active`);
-        break;
-    }
+  const tableId = `table`;
+  const statisticId = `stats`;
+
+  switch (evt.target.id) {
+    case tableId:
+      statistics.getElement().classList.add(`visually-hidden`);
+      tripController.show();
+      menu.getElement().querySelector(`#${tableId}`).classList.add(`trip-tabs__btn--active`);
+      menu.getElement().querySelector(`#${statisticId}`).classList.remove(`trip-tabs__btn--active`);
+      break;
+    case statisticId:
+      tripController.hide();
+      statistics.getElement().classList.remove(`visually-hidden`);
+      menu.getElement().querySelector(`#${tableId}`).classList.remove(`trip-tabs__btn--active`);
+      menu.getElement().querySelector(`#${statisticId}`).classList.add(`trip-tabs__btn--active`);
+      break;
+  }
 });
-
-const addTask = document.querySelector(`.trip-main__event-add-btn`);
-addTask.addEventListener(`click`, () => {
-    tripController.createCard();
-});
-

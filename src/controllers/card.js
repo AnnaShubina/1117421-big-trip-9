@@ -20,11 +20,12 @@ export default class CardController {
   }
 
   init(mode) {
-    let renderPosition = Position.BEFOREEND;
     let currentView = this._card;
 
     if (mode === Mode.ADDING) {
-      renderPosition = Position.AFTERBEGIN;
+      this._cardEdit.getElement().classList.add(`trip-events__item`);
+      this._cardEdit.getElement().querySelector(`.event__favorite-btn`).remove();
+      this._cardEdit.getElement().querySelector(`.event__rollup-btn`).remove();
       currentView = this._cardEdit;
     }
 
@@ -47,13 +48,14 @@ export default class CardController {
             this._container.replaceChild(this._card.getElement(), this._cardEdit.getElement());
           }
         } else if (mode === Mode.ADDING) {
-          this._container.removeChild(currentView.getElement());
+          currentView.removeElement();
         }
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
 
-    this._card.getElement()
+    if (mode === Mode.DEFAULT) {
+      this._card.getElement()
       .querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, () => {
         this._onChangeView();
@@ -61,12 +63,13 @@ export default class CardController {
         document.addEventListener(`keydown`, onEscKeyDown);
       });
 
-    this._cardEdit.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, () => {
-        this._container.replaceChild(this._card.getElement(), this._cardEdit.getElement());
-        document.addEventListener(`keydown`, onEscKeyDown);
-      });
+      this._cardEdit.getElement()
+        .querySelector(`.event__rollup-btn`)
+        .addEventListener(`click`, () => {
+          this._container.replaceChild(this._card.getElement(), this._cardEdit.getElement());
+          document.addEventListener(`keydown`, onEscKeyDown);
+        });
+    }
 
     this._cardEdit.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, () => {
@@ -93,11 +96,11 @@ export default class CardController {
           }
         });
 
-        this._onDataChange(entry, this._data);
+        this._onDataChange(entry, mode === Mode.DEFAULT ? this._data : null);
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
 
-    render(this._container, currentView.getElement(), renderPosition);
+    render(this._container, currentView.getElement(), Position.BEFOREEND);
   }
 
   setDefaultView() {

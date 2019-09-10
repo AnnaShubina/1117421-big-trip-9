@@ -15,6 +15,7 @@ const monthNames = {
 
 const Position = {
   AFTERBEGIN: `afterbegin`,
+  AFTEREND: `afterend`,
   BEFOREEND: `beforeend`,
   AFTER: `after`,
   BEFORE: `before`

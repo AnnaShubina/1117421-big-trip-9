@@ -12,8 +12,14 @@ export default class TripController {
     this._dayList = new DayList();
     this._sorting = new Sorting();
     this._subscriptions = [];
+    this._creatingCard = null;
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+    this._addCardBtn = document.querySelector(`.trip-main__event-add-btn`);
+
+    this._addCardBtn.addEventListener(`click`, () => {
+      this._createCard();
+    });
   }
 
   hide() {
@@ -32,6 +38,8 @@ export default class TripController {
   _setCards(cards) {
     this._cards = cards;
     this._subscriptions = [];
+    this._container.innerHTML = ``;
+    this._addCardBtn.removeAttribute(`disabled`);
     this._clearDayList();
     if (this._cards.length) {
       render(this._container, this._sorting.getElement(), Position.BEFOREEND);
@@ -43,7 +51,7 @@ export default class TripController {
     this._sorting.getElement().addEventListener(`click`, (evt) => this._onSortClick(evt));
   }
 
-  createCard() {
+  _createCard() {
     const defaultCard = {
       type: {
         id: `flight`,
@@ -56,7 +64,12 @@ export default class TripController {
       price: ``,
     };
 
-    new CardController(this._dayList.getElement(), defaultCard, Mode.ADDING, this._onDataChange, this._onChangeView);
+    const cardContainer = document.createElement(`div`);
+    render(this._sorting.getElement(), cardContainer, Position.AFTER);
+
+    this._creatingCard = new CardController(cardContainer, defaultCard, Mode.ADDING, this._onDataChange, this._onChangeView);
+    this._onChangeView();
+    this._addCardBtn.setAttribute(`disabled`, `disabled`);
   }
 
   _renderDayList(cards) {
@@ -65,10 +78,10 @@ export default class TripController {
 
 
     const cardEventsByDate = cards.reduce((day, card) => {
-      if (day[card.startTime]) {
-        day[card.startTime].push(card);
+      if (day[moment(card.startTime).format(`MM-DD-YYYY`)]) {
+        day[moment(card.startTime).format(`MM-DD-YYYY`)].push(card);
       } else {
-        day[card.startTime] = [card];
+        day[moment(card.startTime).format(`MM-DD-YYYY`)] = [card];
       }
 
       return day;
@@ -120,7 +133,7 @@ export default class TripController {
     if (newData === null) {
       this._cards = [...this._cards.slice(0, index), ...this._cards.slice(index + 1)];
     } else if (oldData === null) {
-      this._cards = [newData, ...this._tasks];
+      this._cards = [newData, ...this._cards];
     } else {
       this._cards[index] = newData;
     }
