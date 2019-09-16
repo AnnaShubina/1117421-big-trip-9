@@ -1,10 +1,14 @@
 import Menu from "./components/menu.js";
-import {cards} from "./mocks/card.js";
 import TripController from "./controllers/trip.js";
 import TripInfoController from "./controllers/trip-info.js";
 import StatisticsController from "./controllers/statistics.js";
 import FilterController from "./controllers/filter.js";
 import {Position, render} from "./utils.js";
+import API from "./api.js";
+
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const navHeader = document.querySelector(`.trip-controls h2:first-child`);
@@ -14,7 +18,6 @@ const mainContainer = document.querySelector(`.page-main .page-body__container`)
 const addCardBtn = document.querySelector(`.trip-main__event-add-btn`);
 
 const onDataChange = (newCards) => {
-  cardMocks = newCards;
   filterController.updateData(cardMocks);
   tripInfoController.updateData(cardMocks);
 };
@@ -23,25 +26,20 @@ const onFilterSwitch = (cardsItems) => {
   tripController.show();
   setTableActive();
 };
-const menu = new Menu();
-const statisticsController = new StatisticsController(mainContainer);
-const tripController = new TripController(tripContainer, onDataChange);
-
-let cardMocks = cards;
-
-const filterController = new FilterController(filterHeader, cardMocks, onFilterSwitch);
-const tripInfoController = new TripInfoController(tripInfoContainer, cardMocks);
-
 const setTableActive = () => {
   statisticsController.hide();
   menu.getElement().querySelector(`#table`).classList.add(`trip-tabs__btn--active`);
   menu.getElement().querySelector(`#stats`).classList.remove(`trip-tabs__btn--active`);
 };
 
-render(navHeader, menu.getElement(), Position.AFTER);
+const menu = new Menu();
+const statisticsController = new StatisticsController(mainContainer);
+const tripController = new TripController(tripContainer, onDataChange);
+const filterController = new FilterController(filterHeader, onFilterSwitch);
+const tripInfoController = new TripInfoController(tripInfoContainer);
 
+render(navHeader, menu.getElement(), Position.AFTER);
 statisticsController.hide();
-tripController.show(cardMocks);
 
 menu.getElement().addEventListener(`click`, (evt) => {
   evt.preventDefault();
@@ -58,7 +56,7 @@ menu.getElement().addEventListener(`click`, (evt) => {
       break;
     case statisticId:
       tripController.hide();
-      statisticsController.show(cardMocks);
+      statisticsController.show();
       menu.getElement().querySelector(`#${tableId}`).classList.remove(`trip-tabs__btn--active`);
       menu.getElement().querySelector(`#${statisticId}`).classList.add(`trip-tabs__btn--active`);
       break;
@@ -66,6 +64,13 @@ menu.getElement().addEventListener(`click`, (evt) => {
 });
 
 addCardBtn.addEventListener(`click`, () => {
-  tripController.show(cardMocks);
+  tripController.show();
   setTableActive();
+});
+
+api.getCards().then((cards) => {
+  tripInfoController.create(cards);
+  filterController.create(cards);
+  tripController.show(cards);
+  statisticsController.create(cards);
 });

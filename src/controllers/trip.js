@@ -39,6 +39,7 @@ export default class TripController {
 
   _setCards(cards) {
     this._cards = cards;
+    console.log(this._cards);
     this._subscriptions = [];
     this._activateAddCardBtn();
     this._getTotalSum(this._cards);
@@ -196,7 +197,7 @@ export default class TripController {
       return sum + current;
     }, 0);
     const allOffers = cardsItems.map(({type}) => type.offers);
-    const appliedOffers = allOffers.map((item) => item.filter(({isApplied}) => isApplied));
+    const appliedOffers = allOffers.map((item) => item.filter(({accepted}) => accepted));
     const offersPrices = appliedOffers.map((items) => items.map((item) => item.price));
     const offersPricesTotals = offersPrices.map((prices) => prices.reduce((sum, current) => {
       return sum + current;

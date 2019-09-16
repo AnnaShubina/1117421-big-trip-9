@@ -99,9 +99,9 @@ export default class CardController {
         };
         entry.type.offers.forEach((it) => {
           if (formData.get(`event-offer-${it.id}`)) {
-            it.isApplied = true;
+            it.accepted = true;
           } else {
-            it.isApplied = false;
+            it.accepted = false;
           }
         });
 
