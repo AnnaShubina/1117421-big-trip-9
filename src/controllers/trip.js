@@ -2,8 +2,14 @@ import Sorting from "../components/sorting.js";
 import Day from "../components/day.js";
 import DayList from "../components/day-list.js";
 import CardController from "../controllers/card.js";
+import {types} from '../models/model-types.js';
 import {Position, Mode, render, unrender} from "../utils.js";
 import moment from 'moment';
+import API from "../api.js";
+
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 export default class TripController {
   constructor(container, onDataChange) {
@@ -14,9 +20,8 @@ export default class TripController {
     this._subscriptions = [];
     this._creatingCard = null;
     this._onChangeView = this._onChangeView.bind(this);
-    this._onDataChange = this._onDataChange.bind(this);
+    this._onDataChange = onDataChange;
     this._activateAddCardBtn = this._activateAddCardBtn.bind(this);
-    this._onDataChangeMain = onDataChange;
     this._addCardBtn = document.querySelector(`.trip-main__event-add-btn`);
 
     this._addCardBtn.addEventListener(`click`, () => {
@@ -39,7 +44,6 @@ export default class TripController {
 
   _setCards(cards) {
     this._cards = cards;
-    console.log(this._cards);
     this._subscriptions = [];
     this._activateAddCardBtn();
     this._getTotalSum(this._cards);
@@ -64,15 +68,12 @@ export default class TripController {
 
   _createCard() {
     const defaultCard = {
-      type: {
-        id: `flight`,
-        title: `Flight`,
-        placeholder: `to`,
-      },
+      type: types[0],
       city: {},
       startTime: moment().format(),
       endTime: moment().format(),
-      price: ``,
+      price: 0,
+      isFavorite: false
     };
 
     const cardContainer = document.createElement(`div`);
@@ -136,21 +137,8 @@ export default class TripController {
   _renderCard(container, cardMock) {
     const cardController = new CardController(container, cardMock, Mode.DEFAULT, this._onDataChange, this._onChangeView, this._activateAddCardBtn);
     this._subscriptions.push(cardController.setDefaultView.bind(cardController));
-  }
 
-  _onDataChange(newData, oldData) {
-    const index = this._cards.findIndex((card) => card === oldData);
-
-    if (newData === null) {
-      this._cards = [...this._cards.slice(0, index), ...this._cards.slice(index + 1)];
-    } else if (oldData === null) {
-      this._cards = [newData, ...this._cards];
-    } else {
-      this._cards[index] = newData;
-    }
-
-    this._setCards(this._cards);
-    this._onDataChangeMain(this._cards);
+    api.getOffers().then((offers) => cardController.setOffers(offers));
   }
 
   _onChangeView() {

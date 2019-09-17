@@ -20,6 +20,14 @@ export default class StatisticsController {
     render(this._container, this._statistics.getElement(), Position.BEFOREEND);
   }
 
+  updateData(cards) {
+    this._cards = cards;
+
+    this._chartMoneyInit();
+    this._chartTransportInit();
+    this._chartTimeInit();
+  }
+
   show() {
     this._chartMoneyInit();
     this._chartTransportInit();

@@ -3,7 +3,7 @@ export default class ModelOffer {
       this.type = data[`type`];
       this.offers = data[`offers`].map((offer) => {
         return {
-          id: offer.name.toLowerCase().replace(/ +/g, ' ').trim(),
+          id: offer.name.toLowerCase().replace(/\s+/g, ''),
           title: offer.name,
           price:  offer.price
         }

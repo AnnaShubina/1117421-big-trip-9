@@ -1,7 +1,7 @@
 import Card from "../components/card.js";
 import CardEdit from "../components/card-edit.js";
-import {Position, Mode, KeyCode, render, unrender} from '../utils.js';
-import {types, cities} from '../mocks/card.js';
+import {Position, Mode, KeyCode, Action, prasePictures, parseOffers, render, unrender} from '../utils.js';
+import {types} from '../models/model-types.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
@@ -11,6 +11,8 @@ export default class CardController {
   constructor(container, data, mode, onDataChange, onChangeView, activateAddCardBtn) {
     this._container = container;
     this._data = data;
+    this._cities = [];
+    this._offers = [];
     this._card = new Card(data);
     this._cardEdit = new CardEdit(data);
     this._onChangeView = onChangeView;
@@ -18,6 +20,14 @@ export default class CardController {
     this._activateAddCardBtn = activateAddCardBtn;
 
     this.init(mode);
+  }
+
+  setOffers(offers) {
+    this._offers = offers;
+  }
+
+  setCities(cities) {
+    this._cities = cities;
   }
 
   init(mode) {
@@ -77,7 +87,7 @@ export default class CardController {
     this._cardEdit.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, () => {
         if (mode === Mode.DEFAULT) {
-          this._onDataChange(null, this._data);
+          this._onDataChange(Action.DELETE, this._data);
         } else if (mode === Mode.ADDING) {
           unrender(currentView.getElement());
           currentView.removeElement();
@@ -90,22 +100,19 @@ export default class CardController {
         evt.preventDefault();
 
         const formData = new FormData(this._cardEdit.getElement());
-        const entry = {
-          type: types[types.findIndex((it) => it.id === formData.get(`event-type`))],
-          city: cities[cities.findIndex((it) => it.name === formData.get(`event-destination`))],
-          startTime: moment(formData.get(`event-start-time`)).format(),
-          endTime: moment(formData.get(`event-end-time`)).format(),
-          price: +formData.get(`event-price`)
+        this._data.type = types[types.findIndex((it) => it.id === formData.get(`event-type`))];
+        this._data.city = {
+          name: formData.get(`event-destination`),
+          description: this._cardEdit.getElement().querySelector(`.event__destination-description`).innerText,
+          pictures: prasePictures(this._cardEdit.getElement().querySelectorAll(`.event__photo`))
         };
-        entry.type.offers.forEach((it) => {
-          if (formData.get(`event-offer-${it.id}`)) {
-            it.accepted = true;
-          } else {
-            it.accepted = false;
-          }
-        });
+        this._data.startTime = moment(formData.get(`event-start-time`)).format();
+        this._data.endTime = moment(formData.get(`event-end-time`)).format();
+        this._data.price = +formData.get(`event-price`);
+        this._data.isFavorite = !!formData.get(`event-favorite`);
+        this._data.type.offers = parseOffers(this._cardEdit.getElement().querySelectorAll(`.event__offer-label`), this._cardEdit.getElement().querySelectorAll(`.event__offer-checkbox`));
 
-        this._onDataChange(entry, mode === Mode.DEFAULT ? this._data : null);
+        this._onDataChange(mode === Mode.DEFAULT ? Action.UPDATE : Action.CREATE, this._data);
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
 

@@ -1,5 +1,4 @@
 import AbstractComponent from '../components/absctract-component.js';
-import {cities} from '../mocks/card.js';
 import {types} from '../models/model-types.js';
 import {Position} from '../utils.js';
 import API from '../api.js';
@@ -62,7 +61,7 @@ export default class CardEdit extends AbstractComponent {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${this._type.title} ${this._type.placeholder}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city ? this._city : ``}" list="destination-list-1">
           <datalist id="destination-list-1"></datalist>
         </div>
   
@@ -244,6 +243,5 @@ export default class CardEdit extends AbstractComponent {
         `);
         this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.BEFOREEND, cityHTML);
       }
-
   }
 }
