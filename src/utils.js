@@ -78,42 +78,4 @@ const getDurationString = (start, end) => {
   return duration;
 };
 
-const prasePictures = (pictures) => {
-    const images = Array.from(pictures).map((img) => {
-      return {
-        src: img.src,
-        description: img.alt
-      }
-   });
-
-   return images;
-};
-
-const parseOffers = (labels, inputs) => {
-   const offers = Array.from(labels).map((label) => {
-     return {
-       id: label.querySelector(`.event__offer-title`).innerText.toLowerCase().replace(/\s+/g, ''),
-       title: label.querySelector(`.event__offer-title`).innerText,
-       price: +label.querySelector(`.event__offer-price`).innerText
-     }
-   });
-
-    const checkboxes = Array.from(inputs).map((input) => {
-      return {
-        id: input.id,
-        checked: input.checked
-      }
-    });
-    
-    offers.forEach((item) => {
-      if (checkboxes.find(({id}) => id === `event-offer-${item.id}`).checked) {
-        item.isApplied = true;
-      } else {
-        item.isApplied = false;
-      }
-  });
-
-  return offers;
-}
-
-export {Position, Mode, KeyCode, Action, prasePictures, parseOffers, getDurationString, createElement, render, unrender};
+export {Position, Mode, KeyCode, Action, getDurationString, createElement, render, unrender};

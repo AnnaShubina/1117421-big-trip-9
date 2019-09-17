@@ -5,11 +5,6 @@ import CardController from "../controllers/card.js";
 import {types} from '../models/model-types.js';
 import {Position, Mode, render, unrender} from "../utils.js";
 import moment from 'moment';
-import API from "../api.js";
-
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
-const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 export default class TripController {
   constructor(container, onDataChange) {
@@ -137,8 +132,6 @@ export default class TripController {
   _renderCard(container, cardMock) {
     const cardController = new CardController(container, cardMock, Mode.DEFAULT, this._onDataChange, this._onChangeView, this._activateAddCardBtn);
     this._subscriptions.push(cardController.setDefaultView.bind(cardController));
-
-    api.getOffers().then((offers) => cardController.setOffers(offers));
   }
 
   _onChangeView() {

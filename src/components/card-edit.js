@@ -1,10 +1,7 @@
 import AbstractComponent from '../components/absctract-component.js';
 import {types} from '../models/model-types.js';
 import {Position} from '../utils.js';
-import API from '../api.js';
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
-const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+import {allDestinations, allOffers} from '../main.js';
 
 export default class CardEdit extends AbstractComponent {
   constructor({type, city, price, isFavorite}) {
@@ -18,7 +15,7 @@ export default class CardEdit extends AbstractComponent {
     this._isFavorite = isFavorite;
 
     this._subscribeOnEvents();
-    this._getCitiesDatalist();
+    this._createCitiesDatalist();
   }
 
   getTemplate() {
@@ -138,12 +135,8 @@ export default class CardEdit extends AbstractComponent {
     </form>`.trim();
   }
 
-  _getCitiesDatalist() {
-    api.getCities().then((cities) => this._createCitiesDatalist(cities));
-  }
-
-  _createCitiesDatalist(cities) {
-    const datalistHTML = cities.map(({name}) => `<option value="${name}"></option>`).join(``);
+  _createCitiesDatalist() {
+    const datalistHTML = allDestinations.map(({name}) => `<option value="${name}"></option>`).join(``);
     this.getElement().querySelector(`#destination-list-1`).innerHTML = datalistHTML;
   }
 
@@ -160,10 +153,8 @@ export default class CardEdit extends AbstractComponent {
           const type = types[types.findIndex((it) => it.id === evt.target.value)];
           this.getElement().querySelector(`.event__label`).innerHTML = `${type.title} ${type.placeholder}`;
           this.getElement().querySelector(`.event__type-icon`).src = `img/icons/${type.id}.png`;
-          api.getOffers().then((offers) => {
-            const typeOffers = offers.find(({type: offersType}) => offersType === type.id).offers;
-            this._createOffers(typeOffers);
-          });
+          const typeOffers = allOffers.find(({type: offersType}) => offersType === type.id).offers;
+          this._createOffers(typeOffers);
         }
       });
     });
@@ -186,34 +177,20 @@ export default class CardEdit extends AbstractComponent {
         </div>
       </section>`;
 
-    if (this.getElement().querySelector(`.event__details`)) {
-      const offersContainer = this.getElement().querySelector(`.event__section--offers`);
-      if (offers.length) {
-        if (offersContainer) {
-          offersContainer.innerHTML = offersHTML;
-        } else {
-          this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, offersHTML);
-        }
-      } else {
-        if (offersContainer) {
-          offersContainer.remove();
-        }
-      }
+    const offersContainer = this.getElement().querySelector(`.event__section--offers`);
+
+    if (offers.length) {
+      this._displayDetails(offersContainer, Position.AFTERBEGIN, offersHTML);
     } else {
-      this.getElement().querySelector(`.event__header`).insertAdjacentHTML(Position.AFTEREND, `
-        <section class="event__details"></section>`
-      );
-      this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.AFTERBEGIN, offersHTML);
+      offersContainer.remove();
     }
   }
 
   _onCitySelect() {
     this.getElement()
     .querySelector(`input[name='event-destination']`).addEventListener(`change`, (evt) => {
-      api.getCities().then((cities) => {
-        const city = cities[cities.findIndex((it) => it.name === evt.target.value)];
-        this._createCity(city);
-      })
+      const city = allDestinations[allDestinations.findIndex((it) => it.name === evt.target.value)];
+      this._createCity(city);
     });
   }
 
@@ -230,18 +207,30 @@ export default class CardEdit extends AbstractComponent {
         </div>
       </section>`;
 
-      if (this.getElement().querySelector(`.event__details`)) {
-        if (this.getElement().querySelector(`.event__section--destination`)) {
-          this.getElement().querySelector(`.event__section--destination`).remove();
-          this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.BEFOREEND, cityHTML);
-        } else {
-          this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.BEFOREEND, cityHTML);
-        }
+    const cityContainer = this.getElement().querySelector(`.event__section--destination`);
+
+    this._displayDetails(cityContainer, Position.BEFOREEND, cityHTML);
+  }
+
+  _displayDetails(element, position, html) {
+    const detailsContainer = this.getElement().querySelector(`.event__details`);
+    const renderElement = () => {
+      this.getElement().querySelector(`.event__details`).insertAdjacentHTML(position, html);
+    };
+    const createElement = () => {
+      if (element) {
+        element.remove();
+        renderElement();
       } else {
-        this.getElement().querySelector(`.event__header`).insertAdjacentHTML(Position.AFTEREND, `
-        <section class="event__details"></section>
-        `);
-        this.getElement().querySelector(`.event__details`).insertAdjacentHTML(Position.BEFOREEND, cityHTML);
+        renderElement();
       }
+    };
+
+    if (detailsContainer) {
+      createElement();
+    } else {
+      this.getElement().querySelector(`.event__header`).insertAdjacentHTML(Position.AFTEREND, `<section class="event__details"></section>`);
+      createElement();
+    }
   }
 }

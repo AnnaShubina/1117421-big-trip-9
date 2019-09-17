@@ -25,27 +25,26 @@ const updateData = (cards) => {
   statisticsController.updateData(cards);
 };
 
-const onDataChange = (actionType, data) => {
-  console.log(data)
+const onDataChange = (actionType, cards) => {
   switch (actionType) {
     case Action.UPDATE:
       api.updateCard({
-        id: data.id,
-        data: ModelCard.toRAW(data)
+        id: cards.id,
+        data: ModelCard.toRAW(cards)
       })
         .then(() => api.getCards())
         .then((data) => updateData(data));
       break;
     case Action.DELETE:
       api.deleteCard({
-        id: data.id
+        id: cards.id
       })
         .then(() => api.getCards())
         .then((data) => updateData(data));
       break;
     case Action.CREATE:
       api.createCard({
-        data: ModelCard.toRAW(data)
+        data: ModelCard.toRAW(cards)
       })
         .then(() => api.getCards())
         .then((data) => updateData(data));
@@ -64,11 +63,14 @@ const setTableActive = () => {
   menu.getElement().querySelector(`#stats`).classList.remove(`trip-tabs__btn--active`);
 };
 
+let allDestinations;
+let allOffers;
+
 const menu = new Menu();
 const statisticsController = new StatisticsController(mainContainer);
-const tripController = new TripController(tripContainer, onDataChange);
 const filterController = new FilterController(filterHeader, onFilterSwitch);
 const tripInfoController = new TripInfoController(tripInfoContainer);
+const tripController = new TripController(tripContainer, onDataChange);
 
 render(navHeader, menu.getElement(), Position.AFTER);
 statisticsController.hide();
@@ -100,10 +102,20 @@ addCardBtn.addEventListener(`click`, () => {
   setTableActive();
 });
 
-api.getCards().then((cards) => {
-  console.log(cards)
-  tripInfoController.create(cards);
-  filterController.create(cards);
-  tripController.show(cards);
-  statisticsController.create(cards);
+api.getCities().then((cities) => {
+  allDestinations = cities;
+
+  api.getOffers().then((offers) => {
+    allOffers = offers;
+
+    api.getCards().then((cards) => {
+      tripInfoController.create(cards);
+      filterController.create(cards);
+      tripController.show(cards);
+      statisticsController.create(cards);
+    });
+  });
 });
+
+
+export {allDestinations, allOffers};
