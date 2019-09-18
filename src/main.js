@@ -84,17 +84,19 @@ const setTableActive = () => {
   menu.getElement().querySelector(`#stats`).classList.remove(`trip-tabs__btn--active`);
 };
 
-let allDestinations;
-let allOffers;
-
 const menu = new Menu();
 const statisticsController = new StatisticsController(mainContainer);
 const filterController = new FilterController(filterHeader, onFilterSwitch);
 const tripInfoController = new TripInfoController(tripInfoContainer);
 const tripController = new TripController(tripContainer, onDataChange);
+const loadingText = `Loading…`;
+
+let allDestinations;
+let allOffers;
 
 render(navHeader, menu.getElement(), Position.AFTER);
 statisticsController.hide();
+tripContainer.innerHTML = loadingText;
 
 menu.getElement().addEventListener(`click`, (evt) => {
   evt.preventDefault();
