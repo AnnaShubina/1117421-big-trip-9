@@ -69,7 +69,7 @@ export default class CardController {
     this._cardEdit.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, () => {
         if (mode === Mode.DEFAULT) {
-          this._onDataChange(Action.DELETE, this._data);
+          this._onDataChange(Action.DELETE, this._data, this._cardEdit);
         } else if (mode === Mode.ADDING) {
           unrender(currentView.getElement());
           currentView.removeElement();
@@ -97,7 +97,7 @@ export default class CardController {
           }
         });
 
-        this._onDataChange(mode === Mode.DEFAULT ? Action.UPDATE : Action.CREATE, this._data);
+        this._onDataChange(mode === Mode.DEFAULT ? Action.UPDATE : Action.CREATE, this._data, this._cardEdit);
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
 

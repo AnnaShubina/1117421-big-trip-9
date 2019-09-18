@@ -24,6 +24,13 @@ const Action = {
   UPDATE: `update`
 };
 
+const ButtonText = {
+  SAVING: `Saving....`,
+  DELETING: `Deleting....`,
+  SAVE: `Save`,
+  DELETE: `Delete`
+};
+
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -78,4 +85,4 @@ const getDurationString = (start, end) => {
   return duration;
 };
 
-export {Position, Mode, KeyCode, Action, getDurationString, createElement, render, unrender};
+export {Position, Mode, KeyCode, Action, ButtonText, getDurationString, createElement, render, unrender};

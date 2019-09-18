@@ -135,6 +135,41 @@ export default class CardEdit extends AbstractComponent {
     </form>`.trim();
   }
 
+  block() {
+    this.getElement().querySelectorAll(`input, button`).forEach((element) => element.setAttribute(`disabled`, `disabled`));
+  }
+
+  unblock() {
+    this.getElement().querySelectorAll(`input, button`).forEach((element) => element.removeAttribute(`disabled`));
+  }
+
+  changeSubmitBtnText(text) {
+    this.getElement().querySelector(`.event__save-btn`).innerText = text;
+  }
+
+  changeDeleteBtnText(text) {
+    this.getElement().querySelector(`.event__reset-btn`).innerText = text;
+  }
+
+  shake() {
+    this._displayError(true);
+
+    const ANIMATION_TIMEOUT = 600;
+    this.getElement().style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+    }, ANIMATION_TIMEOUT);
+  }
+
+  _displayError(isError) {
+    if (isError) {
+      this.getElement().classList.add(`error`);
+    } else {
+      this.getElement().classList.remove(`error`);
+    }
+  }
+
   _createCitiesDatalist() {
     const datalistHTML = allDestinations.map(({name}) => `<option value="${name}"></option>`).join(``);
     this.getElement().querySelector(`#destination-list-1`).innerHTML = datalistHTML;
@@ -143,6 +178,15 @@ export default class CardEdit extends AbstractComponent {
   _subscribeOnEvents() {
     this._onTypeSelect();
     this._onCitySelect();
+    this._onFocus();
+  }
+
+  _onFocus() {
+    this.getElement().querySelectorAll(`input`).forEach((element) => {
+      element.addEventListener(`focus`, () => {
+        this._displayError(false);
+      });
+    });
   }
 
   _onTypeSelect() {

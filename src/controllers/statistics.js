@@ -23,9 +23,14 @@ export default class StatisticsController {
   updateData(cards) {
     this._cards = cards;
 
-    this._chartMoneyInit();
-    this._chartTransportInit();
-    this._chartTimeInit();
+    this._updateChartData(this._moneyChart, this._getMoneyData());
+    this._updateChartData(this._transportChart, this._getTransportData());
+    this._updateChartData(this._timeChart, this._getTimeData());
+  }
+
+  _updateChartData(chart, data) {
+    chart.data.datasets[0].data = data.data;
+    chart.update();
   }
 
   show() {
@@ -42,29 +47,13 @@ export default class StatisticsController {
   _chartMoneyInit() {
     const moneyCtx = this._statistics.getElement().querySelector(`.statistics__chart--money`);
 
-    const cards = this._cards.reduce((acc, currentValue) => {
-      const index = acc.findIndex(({type}) => type === currentValue.type.title);
-      if (index !== -1) {
-        acc[index].price += currentValue.price;
-      } else {
-        acc.push({
-          type: currentValue.type.title,
-          price: currentValue.price,
-        });
-      }
-      return acc;
-    }, []);
-
-    const types = cards.map(({type}) => type);
-    const prices = cards.map(({price}) => price);
-
     this._moneyChart = new Chart(moneyCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: types,
+        labels: this._getMoneyData().labels,
         datasets: [{
-          data: prices,
+          data: this._getMoneyData().data,
           backgroundColor: `#fff`,
         }]
       },
@@ -121,30 +110,13 @@ export default class StatisticsController {
   _chartTransportInit() {
     const transportCtx = this._statistics.getElement().querySelector(`.statistics__chart--transport`);
 
-    const transportCards = this._cards.filter(({type}) => type.type === `transport`);
-    const cards = transportCards.reduce((acc, currentValue) => {
-      const index = acc.findIndex(({type}) => type === currentValue.type.title);
-      if (index !== -1) {
-        acc[index].count++;
-      } else {
-        acc.push({
-          type: currentValue.type.title,
-          count: 1,
-        });
-      }
-      return acc;
-    }, []);
-
-    const types = cards.map(({type}) => type);
-    const counts = cards.map(({count}) => count);
-
     this._transportChart = new Chart(transportCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: types,
+        labels: this._getTransportData().labels,
         datasets: [{
-          data: counts,
+          data: this._getTransportData().data,
           backgroundColor: `#fff`,
         }]
       },
@@ -198,29 +170,13 @@ export default class StatisticsController {
   _chartTimeInit() {
     const timeCtx = this._statistics.getElement().querySelector(`.statistics__chart--time`);
 
-    const cards = this._cards.map((card) => {
-      const startMoment = moment(card.startTime);
-      const endMoment = moment(card.endTime);
-      const diff = endMoment.diff(startMoment);
-      const title = `${card.type.title}  ${card.type.placeholder}  ${card.city.name}`;
-      const duration = Math.abs(moment.duration(diff).asHours());
-
-      return {
-        title,
-        duration,
-      };
-    });
-
-    const labels = cards.map(({title}) => title);
-    const durations = cards.map(({duration}) => duration);
-
     this._timeChart = new Chart(timeCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels,
+        labels: this._getTimeData().labels,
         datasets: [{
-          data: durations,
+          data: this._getTimeData().data,
           backgroundColor: `#fff`,
         }]
       },
@@ -269,5 +225,75 @@ export default class StatisticsController {
         }
       }
     });
+  }
+
+  _getMoneyData() {
+    const cards = this._cards.reduce((acc, currentValue) => {
+      const index = acc.findIndex(({type}) => type === currentValue.type.title);
+      if (index !== -1) {
+        acc[index].price += currentValue.price;
+      } else {
+        acc.push({
+          type: currentValue.type.title,
+          price: currentValue.price,
+        });
+      }
+      return acc;
+    }, []);
+
+    const types = cards.map(({type}) => type);
+    const prices = cards.map(({price}) => price);
+
+    return {
+      labels: types,
+      data: prices
+    };
+  }
+
+  _getTransportData() {
+    const transportCards = this._cards.filter(({type}) => type.type === `transport`);
+    const cards = transportCards.reduce((acc, currentValue) => {
+      const index = acc.findIndex(({type}) => type === currentValue.type.title);
+      if (index !== -1) {
+        acc[index].count++;
+      } else {
+        acc.push({
+          type: currentValue.type.title,
+          count: 1,
+        });
+      }
+      return acc;
+    }, []);
+
+    const types = cards.map(({type}) => type);
+    const counts = cards.map(({count}) => count);
+
+    return {
+      labels: types,
+      data: counts
+    };
+  }
+
+  _getTimeData() {
+    const cards = this._cards.map((card) => {
+      const startMoment = moment(card.startTime);
+      const endMoment = moment(card.endTime);
+      const diff = endMoment.diff(startMoment);
+      const title = `${card.type.title}  ${card.type.placeholder}  ${card.city.name}`;
+      const duration = Math.abs(moment.duration(diff).asHours());
+
+      return {
+        title,
+        duration,
+      };
+    });
+
+    const labels = cards.map(({title}) => title);
+    const durations = cards.map(({duration}) => duration);
+
+    return {
+      labels,
+      data: durations
+    };
   }
 }
