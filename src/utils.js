@@ -28,7 +28,8 @@ const ButtonText = {
   SAVING: `Saving....`,
   DELETING: `Deleting....`,
   SAVE: `Save`,
-  DELETE: `Delete`
+  DELETE: `Delete`,
+  CANCEL: `Cancel`
 };
 
 const createElement = (template) => {

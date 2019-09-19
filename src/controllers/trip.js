@@ -49,13 +49,13 @@ export default class TripController {
 
   _renderCards(cards) {
     this._container.innerHTML = ``;
+    this._clearSorting();
     this._clearDayList();
     if (cards.length) {
       render(this._container, this._sorting.getElement(), Position.BEFOREEND);
       this._sorting.getElement().addEventListener(`click`, (evt) => this._onSortClick(evt, cards));
       this._renderDayList(cards);
     } else {
-      this._sorting.removeElement();
       this._renderEmptyMessage();
     }
   }
@@ -77,7 +77,7 @@ export default class TripController {
     const cardContainer = document.createElement(`div`);
     const tripContainer = document.querySelector(`.trip-events`);
 
-    if (this._sorting.getElement()) {
+    if (this._cards.length) {
       render(this._sorting.getElement(), cardContainer, Position.AFTER);
     } else {
       render(tripContainer, cardContainer, Position.BEFOREEND);
@@ -173,6 +173,11 @@ export default class TripController {
   _clearDayList() {
     unrender(this._dayList.getElement());
     this._dayList.removeElement();
+  }
+
+  _clearSorting() {
+    unrender(this._sorting.getElement());
+    this._sorting.removeElement();
   }
 
   _onChangeView() {

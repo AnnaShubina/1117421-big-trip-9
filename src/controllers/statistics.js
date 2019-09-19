@@ -28,11 +28,6 @@ export default class StatisticsController {
     this._updateChartData(this._timeChart, this._getTimeData());
   }
 
-  _updateChartData(chart, data) {
-    chart.data.datasets[0].data = data.data;
-    chart.update();
-  }
-
   show() {
     this._chartMoneyInit();
     this._chartTransportInit();
@@ -42,6 +37,11 @@ export default class StatisticsController {
 
   hide() {
     this._statistics.getElement().classList.add(`visually-hidden`);
+  }
+
+  _updateChartData(chart, data) {
+    chart.data.datasets[0].data = data.data;
+    chart.update();
   }
 
   _chartMoneyInit() {

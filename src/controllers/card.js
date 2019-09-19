@@ -1,6 +1,6 @@
 import Card from "../components/card.js";
 import CardEdit from "../components/card-edit.js";
-import {Position, Mode, KeyCode, Action, render, unrender} from '../utils.js';
+import {Position, Mode, KeyCode, Action, ButtonText, render, unrender} from '../utils.js';
 import {types} from '../models/model-types.js';
 import {allDestinations, allOffers} from '../main.js';
 import flatpickr from 'flatpickr';
@@ -28,6 +28,7 @@ export default class CardController {
       this._cardEdit.getElement().classList.add(`trip-events__item`);
       this._cardEdit.getElement().querySelector(`.event__favorite-btn`).remove();
       this._cardEdit.getElement().querySelector(`.event__rollup-btn`).remove();
+      this._cardEdit.getElement().querySelector(`.event__reset-btn`).innerHTML = ButtonText.CANCEL;
       currentView = this._cardEdit;
     }
 
@@ -111,16 +112,23 @@ export default class CardController {
   }
 
   _addFlatpickr() {
-    flatpickr(this._cardEdit.getElement().querySelector(`input[name=event-start-time]`), {
+    const inputStartTime = this._cardEdit.getElement().querySelector(`input[name=event-start-time]`);
+    const inputEndTime = this._cardEdit.getElement().querySelector(`input[name=event-end-time]`);
+
+    flatpickr(inputStartTime, {
       enableTime: true,
       dateFormat: `Y.m.d H:i`,
       defaultDate: this._data.startTime,
+      onChange: (dateStr, dateObj) => {
+        flatpickrEndTime.set(`minDate`, dateObj);
+      }
     });
 
-    flatpickr(this._cardEdit.getElement().querySelector(`input[name=event-end-time]`), {
+    const flatpickrEndTime = flatpickr(inputEndTime, {
       enableTime: true,
       dateFormat: `Y.m.d H:i`,
       defaultDate: this._data.endTime,
+      minDate: this._data.startTime
     });
   }
 }
