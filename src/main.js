@@ -3,7 +3,7 @@ import TripController from "./controllers/trip.js";
 import TripInfoController from "./controllers/trip-info.js";
 import StatisticsController from "./controllers/statistics.js";
 import FilterController from "./controllers/filter.js";
-import {Position, Action, render} from "./utils.js";
+import {Position, Action, ButtonText, render} from "./utils.js";
 import API from "./api.js";
 import ModelCard from "./models/model-card.js";
 
@@ -25,29 +25,50 @@ const updateData = (cards) => {
   statisticsController.updateData(cards);
 };
 
-const onDataChange = (actionType, cards) => {
+const onDataChange = (actionType, cards, element) => {
   switch (actionType) {
     case Action.UPDATE:
+      element.block();
+      element.changeSubmitBtnText(ButtonText.SAVING);
       api.updateCard({
         id: cards.id,
         data: ModelCard.toRAW(cards)
       })
         .then(() => api.getCards())
-        .then((data) => updateData(data));
+        .then((data) => updateData(data))
+        .catch(() => {
+          element.shake();
+          element.unblock();
+          element.changeSubmitBtnText(ButtonText.SAVE);
+        });
       break;
     case Action.DELETE:
+      element.block();
+      element.changeDeleteBtnText(ButtonText.DELETING);
       api.deleteCard({
         id: cards.id
       })
         .then(() => api.getCards())
-        .then((data) => updateData(data));
+        .then((data) => updateData(data))
+        .catch(() => {
+          element.shake();
+          element.unblock();
+          element.changeDeleteBtnText(ButtonText.DELETE);
+        });
       break;
     case Action.CREATE:
+      element.block();
+      element.changeSubmitBtnText(ButtonText.SAVING);
       api.createCard({
         data: ModelCard.toRAW(cards)
       })
         .then(() => api.getCards())
-        .then((data) => updateData(data));
+        .then((data) => updateData(data))
+        .catch(() => {
+          element.shake();
+          element.unblock();
+          element.changeSubmitBtnText(ButtonText.SAVE);
+        });
       break;
   }
 };
@@ -63,17 +84,19 @@ const setTableActive = () => {
   menu.getElement().querySelector(`#stats`).classList.remove(`trip-tabs__btn--active`);
 };
 
-let allDestinations;
-let allOffers;
-
 const menu = new Menu();
 const statisticsController = new StatisticsController(mainContainer);
 const filterController = new FilterController(filterHeader, onFilterSwitch);
 const tripInfoController = new TripInfoController(tripInfoContainer);
 const tripController = new TripController(tripContainer, onDataChange);
+const loadingText = `Loading…`;
+
+let allDestinations;
+let allOffers;
 
 render(navHeader, menu.getElement(), Position.AFTER);
 statisticsController.hide();
+tripContainer.innerHTML = loadingText;
 
 menu.getElement().addEventListener(`click`, (evt) => {
   evt.preventDefault();
