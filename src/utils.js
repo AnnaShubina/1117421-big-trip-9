@@ -62,13 +62,10 @@ const unrender = (element) => {
 };
 
 const getDurationString = (start, end) => {
-  let startMoment = moment(start);
-  let endMoment = moment(end);
-  let diff = endMoment.diff(startMoment);
   let duration = ``;
-  let minutes = Math.abs(moment.duration(diff).minutes());
-  let hours = Math.abs(moment.duration(diff).hours());
-  let days = Math.abs(moment.duration(diff).days());
+  let minutes = getDuration(start, end).minutes();
+  let hours = getDuration(start, end).hours();
+  let days = getDuration(start, end).days();
   days = (days < 10) ? `0${days}` : days;
   hours = (hours < 10) ? `0${hours}` : hours;
   minutes = (minutes < 10) ? `0${minutes}` : minutes;
@@ -86,4 +83,11 @@ const getDurationString = (start, end) => {
   return duration;
 };
 
-export {Position, Mode, KeyCode, Action, ButtonText, getDurationString, createElement, render, unrender};
+const getDuration = (start, end) => {
+  const startMoment = moment(start);
+  const endMoment = moment(end);
+  const diff = endMoment.diff(startMoment);
+  return moment.duration(diff);
+}
+
+export {Position, Mode, KeyCode, Action, ButtonText, getDuration, getDurationString, createElement, render, unrender};

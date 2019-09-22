@@ -3,7 +3,7 @@ import Day from "../components/day.js";
 import DayList from "../components/day-list.js";
 import CardController from "../controllers/card.js";
 import {types} from '../models/model-types.js';
-import {Position, Mode, render, unrender} from "../utils.js";
+import {Position, Mode, render, unrender, getDuration} from "../utils.js";
 import moment from 'moment';
 
 export default class TripController {
@@ -201,18 +201,15 @@ export default class TripController {
     switch (evt.target.dataset.sortType) {
       case `time`:
         const sortedByTimeCards = cards.slice().sort((a, b) => {
-          if (moment(a.startTime).isBefore(b.startTime)) {
-            return -1;
-          }
-          if (moment(a.startTime).isAfter(b.startTime)) {
-            return 1;
-          }
-          return 0;
+          const aDuration = getDuration(a.startTime, a.endTime);
+          const bDuration = getDuration(b.startTime, b.endTime);
+          
+          return bDuration - aDuration;
         });
         this._renderCardList(sortedByTimeCards);
         break;
       case `price`:
-        const sortedByPriceCards = cards.slice().sort((a, b) => a.price - b.price);
+        const sortedByPriceCards = cards.slice().sort((a, b) => b.price - a.price);
         this._renderCardList(sortedByPriceCards);
         break;
       case `default`:

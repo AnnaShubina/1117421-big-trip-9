@@ -1,6 +1,5 @@
 import Statistics from "../components/statistics.js";
-import {Position, render} from "../utils.js";
-import moment from 'moment';
+import {Position, render, getDuration} from "../utils.js";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -276,11 +275,8 @@ export default class StatisticsController {
 
   _getTimeData() {
     const cards = this._cards.map((card) => {
-      const startMoment = moment(card.startTime);
-      const endMoment = moment(card.endTime);
-      const diff = endMoment.diff(startMoment);
       const title = `${card.type.title}  ${card.type.placeholder}  ${card.city.name}`;
-      const duration = Math.abs(moment.duration(diff).asHours());
+      const duration = getDuration(card.startTime, card.endTime).asHours();
 
       return {
         title,
