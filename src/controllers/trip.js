@@ -203,7 +203,7 @@ export default class TripController {
         const sortedByTimeCards = cards.slice().sort((a, b) => {
           const aDuration = getDuration(a.startTime, a.endTime);
           const bDuration = getDuration(b.startTime, b.endTime);
-          
+
           return bDuration - aDuration;
         });
         this._renderCardList(sortedByTimeCards);

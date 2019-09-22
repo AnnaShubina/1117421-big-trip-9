@@ -88,6 +88,6 @@ const getDuration = (start, end) => {
   const endMoment = moment(end);
   const diff = endMoment.diff(startMoment);
   return moment.duration(diff);
-}
+};
 
 export {Position, Mode, KeyCode, Action, ButtonText, getDuration, getDurationString, createElement, render, unrender};
