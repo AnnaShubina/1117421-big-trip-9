@@ -3,7 +3,7 @@ import Day from "../components/day.js";
 import DayList from "../components/day-list.js";
 import CardController from "../controllers/card.js";
 import {types} from '../models/model-types.js';
-import {Position, Mode, render, unrender} from "../utils.js";
+import {Position, Mode, render, unrender, getDuration, sortMomentDates} from "../utils.js";
 import moment from 'moment';
 
 export default class TripController {
@@ -103,26 +103,10 @@ export default class TripController {
       return day;
     }, {});
 
-    const byDateSortedCardEvents = Object.entries(byDateCardEvents).sort((a, b) => {
-      if (moment(a[0]).isBefore(b[0])) {
-        return -1;
-      }
-      if (moment(a[0]).isAfter(b[0])) {
-        return 1;
-      }
-      return 0;
-    });
+    const byDateSortedCardEvents = Object.entries(byDateCardEvents).sort((a, b) => sortMomentDates(a[0], b[0]));
 
     byDateSortedCardEvents.forEach(([date, cardsItems]) => {
-      const sortedByStartTimeCards = cardsItems.slice().sort((a, b) => {
-        if (moment(a.startTime).isBefore(b.startTime)) {
-          return -1;
-        }
-        if (moment(a.startTime).isAfter(b.startTime)) {
-          return 1;
-        }
-        return 0;
-      });
+      const sortedByStartTimeCards = cardsItems.slice().sort((a, b) => sortMomentDates(a.startTime, b.startTime));
       this._renderCardList(sortedByStartTimeCards, date);
     });
   }
@@ -201,18 +185,15 @@ export default class TripController {
     switch (evt.target.dataset.sortType) {
       case `time`:
         const sortedByTimeCards = cards.slice().sort((a, b) => {
-          if (moment(a.startTime).isBefore(b.startTime)) {
-            return -1;
-          }
-          if (moment(a.startTime).isAfter(b.startTime)) {
-            return 1;
-          }
-          return 0;
+          const aDuration = getDuration(a.startTime, a.endTime);
+          const bDuration = getDuration(b.startTime, b.endTime);
+
+          return bDuration - aDuration;
         });
         this._renderCardList(sortedByTimeCards);
         break;
       case `price`:
-        const sortedByPriceCards = cards.slice().sort((a, b) => a.price - b.price);
+        const sortedByPriceCards = cards.slice().sort((a, b) => b.price - a.price);
         this._renderCardList(sortedByPriceCards);
         break;
       case `default`:
