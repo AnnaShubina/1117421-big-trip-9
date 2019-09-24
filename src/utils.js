@@ -90,4 +90,14 @@ const getDuration = (start, end) => {
   return moment.duration(diff);
 };
 
-export {Position, Mode, KeyCode, Action, ButtonText, getDuration, getDurationString, createElement, render, unrender};
+const sortMomentDates = (a, b) => {
+  if (moment(a).isBefore(b)) {
+    return -1;
+  }
+  if (moment(a).isAfter(b)) {
+    return 1;
+  }
+  return 0;
+};
+
+export {Position, Mode, KeyCode, Action, ButtonText, getDuration, getDurationString, sortMomentDates, createElement, render, unrender};
