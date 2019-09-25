@@ -150,7 +150,6 @@ window.addEventListener(`offline`, () => {
 window.addEventListener(`online`, () => {
   document.title = document.title.split(`[OFFLINE]`)[0];
   provider.syncCards();
-  console.log(window.navigator.onLine)
 });
 
 export {allDestinations, allOffers};

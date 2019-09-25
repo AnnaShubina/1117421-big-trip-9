@@ -16,7 +16,6 @@ export default class Provider {
   }
 
   updateCard({id, data}) {
-    console.log(this._isOnline())
     if (this._isOnline()) {
       return this._api.updateCard({id, data}).then((card) => {
         this._store.setItem(CARDS_STORE_KEY, {key: card.id, item: ModelCard.toRAW(card)});
@@ -36,7 +35,7 @@ export default class Provider {
       });
     } else {
       data.id = this._generateId();
-      this._store.setItem(CARDS_STORE_KEY,{key: data.id, item: data});
+      this._store.setItem(CARDS_STORE_KEY, {key: data.id, item: data});
       return Promise.resolve(ModelCard.parseCard(data));
     }
   }
@@ -67,9 +66,7 @@ export default class Provider {
   }
 
   syncCards() {
-    if (this._isOnline()) {
-      return this._api.syncCards(objectToArray(this._store.getAll()));
-    }
+    return this._api.syncCards(objectToArray(this._store.getAll()));
   }
 
   getOffers() {
