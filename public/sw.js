@@ -30,7 +30,6 @@ self.addEventListener('fetch', (evt) => {
     evt.respondWith(
       caches.match(evt.request)
         .then((response) => {
-          console.log(`Find in cache`, {response});
           if (response) {
             return response;
           } else {

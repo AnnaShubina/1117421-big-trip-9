@@ -66,7 +66,7 @@ export default class Provider {
   }
 
   syncCards() {
-    return this._api.syncCards(objectToArray(this._store.getAll()));
+    return this._api.syncCards(objectToArray(this._store.getAll(CARDS_STORE_KEY)));
   }
 
   getOffers() {
